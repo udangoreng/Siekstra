@@ -1,0 +1,154 @@
+<?php
+
+namespace App\Http\Controllers\Kesiswaan;
+
+use App\Http\Controllers\Controller;
+use App\Models\Ekstra;
+use App\Models\Pelatih;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use RealRashid\SweetAlert\Facades\Alert;
+
+class PelatihController extends Controller
+{
+    public function index(){
+        $data = Pelatih::with('ekstra')->paginate(25);
+        $ekstra = Ekstra::all();
+        return view('Kesiswaan.pelatih', ['pelatih'=>$data, 'ekstra'=>$ekstra]);
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'NIP'=>'required',
+            'nama_pelatih'=>'required',
+            'nomor_hp_pelatih'=>'required',
+            'alamat_pelatih'=>'required',
+        ],[
+            'NIP.required'=>'Harap Isi NIP',
+            'nama_pelatih.required'=>'Harap Isi Nama',
+            'nomor_hp_pelatih.required'=>'Harap Isi Nomor HP',
+            'alamat_pelatih.required'=>'Harap Isi Alamat',
+        ]);
+
+        if($validator->fails()){
+            $message='';
+            foreach ($validator->errors()->messages() as $value){
+                $message .=  $value[0].'<br>';
+            }
+            alert()->error('Terjadi Kesalahan', $message)->toHtml();
+            return redirect()->back();
+        } else {
+            // Create user by NIP & Nip password@SMKN1jenpo
+            $email = $request->NIP."@contoh.com";
+            $pass = $request->NIP."@SMKN1jenpo";
+
+            $user = User::create([
+                'name' => $request->nama_pelatih,
+                'email' => $email,
+                'username' => $request->NIP,
+                'password' => $pass,
+                'role' => "Pelatih",
+            ]);
+            
+            if($user){
+                if(User::where('username', $request->NIP)){
+                    // Get Userid by those NIP
+                    $userdata = User::where('username', $request->NIP)->first();
+
+                    // Create a user
+                    $data = Pelatih::create([
+                        'NIP' => $request->NIP,
+                        'user_id' => $userdata->id,
+                        'nama_pelatih' => $request->nama_pelatih,
+                        'nomor_hp_pelatih' => $request->nomor_hp_pelatih,
+                        'alamat_pelatih' => $request->alamat_pelatih,
+                    ]);
+
+                    if($request->ekstra_id != "-"){
+                        DB::table('ekstra_diikuti')->insert([
+                            'user_id' => $userdata->id,
+                            'ekstra_id' => $request->ekstra_id,
+                        ]);
+                    };
+                    
+                    if($data){
+                        toast('Data Berhasil Ditambahkan','success');
+                        return redirect('/kesiswaan/pelatih');
+                    }
+                } 
+            }
+        }
+    }
+
+    public function show(string $id)
+    {
+        // One to One relationship
+        $pelatih = Pelatih::with('ekstra')->where('id', $id)->first();
+        $email = User::where('id', $pelatih->user_id)->first()->email;
+        $ekstra = Ekstra::all();
+        return view('Kesiswaan.editpelatih', ['pelatih'=>$pelatih, 'ekstra'=>$ekstra, 'email'=>$email]);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $ekstra = Pelatih::find($id);
+        $updetail = [
+            'NIP'=>$request->NIP,
+            'nama_pelatih'=>$request->nama_pelatih,
+            'nomor_hp_pelatih'=>$request->nomor_hp_pelatih,
+            'alamat_pelatih'=>$request->alamat_pelatih,
+        ];
+
+        $userdata = [
+            'email'=>$request->email,
+            'name'=>$request->nama_pelatih,
+            'username'=>$request->NIP,
+        ];
+
+        $ekstra->update($updetail);
+        User::where('id', $request->user_id)->update($userdata);
+        return redirect('kesiswaan/pelatih/'.$id);
+       
+    }
+
+    public function assign(Request $request, string $id){
+        // Check if user with those excact data isnt there
+        $data = DB::table('ekstra_diikuti')
+                ->where('user_id', $request->id)->where('ekstra_id', $request->ekstra_id)->first();
+
+        if(!$data){
+            DB::table('ekstra_diikuti')->insert([
+                'user_id' => $request->id, 
+                'ekstra_id' => $request->ekstra_id,
+            ]);
+
+            toast('Data Berhasil Ditambahkan','success');
+            return redirect('/kesiswaan/pelatih/'.$id);
+        }
+
+        Alert::warning('Perhatian', 'Ekstrakurikuler Telah Ditambahkan');
+        return redirect('/kesiswaan/pelatih/'.$id);
+    }
+
+    public function cancel(Request $request, string $id){
+        $data = DB::table('ekstra_diikuti')->where('user_id', '=', $request->user_id)->where('ekstra_id', '=', $request->ekstra_id)->delete();
+        return redirect('/kesiswaan/pelatih/'.$id);
+        // delete where id = id, ekstra_id = id. Tahun ajaran = tahun ajaran
+    }
+
+    public function destroy(string $id)
+    {
+        $data = Pelatih::where('id', $id);
+        $acc = User::where('id', $data->first()->user_id);
+        if($data){
+            $data->delete();
+            $acc->delete();
+            Alert::success('Berhasil Menghapus', 'Berhasil Menghapus Ekstrakurikuler');
+            return redirect('/kesiswaan/pelatih');
+        }
+    }
+}
