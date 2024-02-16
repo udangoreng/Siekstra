@@ -33,15 +33,6 @@
                         <label for="exampleFormControlInput1" class="form-label">Alamat</label>
                         <input type="text" class="form-control" name="alamat_pelatih" id="exampleFormControlInput1">
                     </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Ekstra Dilatih</label>
-                        <select name="ekstra_id" class="form-select" aria-label="Default select example">
-                            <option value="-">-</option>
-                            @foreach ($ekstra as $item)
-                                <option value="{{ $item->id }}">{{ $item->nama_ekstra }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>

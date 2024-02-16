@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('absensi_id');
             $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->enum('status', ['Dikonfirmasi', 'Pending'])->default('Pending');
+            $table->enum('status', ['Dikonfirmasi', 'Pending', 'Ditolak'])->default('Pending');
             $table->enum('keterangan', ['Hadir', 'Ijin', 'Sakit', 'Alpha'])->default('Alpha');
             $table->timestamps();
         });

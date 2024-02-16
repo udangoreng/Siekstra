@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Kesiswaan;
 use App\Http\Controllers\Controller;
 use App\Models\DetailEkstra;
 use App\Models\Ekstra;
+use App\Models\Pelatih;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -15,9 +18,14 @@ class EkstraController extends Controller
     
     public function index()
     {
-        $data = Ekstra::with('pelatih')->get();
-
-        return view('Kesiswaan.ekstra', ['data'=>$data]);
+        $data = Ekstra::with('pelatih', 'siswa')->get();
+        $month = Carbon::now()->month;
+        if ($month >= 7){
+            $thn_ajaran = Carbon::now()->year."-".(Carbon::now()->year)+1;
+        } else {
+            $thn_ajaran = ((Carbon::now()->year)-1)."-".(Carbon::now()->year);
+        }
+        return view('Kesiswaan.ekstra', ['data'=>$data, 'thn'=>$thn_ajaran]);
 
         //Filter
     }
@@ -57,21 +65,39 @@ class EkstraController extends Controller
         }
     }
 
-    
-    public function show(string $id)
+    public function redir(request $request, string $id)
     {
-        $ekstra = Ekstra::with('pelatih')->with('siswa')->where('id', $id)->first();
-        $detail = DetailEkstra::where('id_ekstra', $id)->first();
+        $year = str_replace('/', '-', $request->tahun_ajaran);
+        return redirect('/kesiswaan/ekstra/'.$id.'/'.$year);
+    }
 
-        if($detail){
-            $ekstra = array_merge($ekstra->toArray(), $detail->toArray());
-            return view('Kesiswaan.editekstra', ['id'=>$id, 'ekstra'=>(object) $ekstra]);
-        }
+    
+    public function show(request $request, string $id, string $thn)
+    {
+        $thn_ajaran =  str_replace('-', '/', $thn);
 
-        // Lihat Ekstra, jika ada dengan id yang sama update.
-        // Untuk tahun ajaran cek hari, jika > Juli, tahun +1;
-        // Halaman data kosong alias 404
-        return view('Kesiswaan.editekstra', ['id'=>$id, 'ekstra'=>$ekstra]);
+        $siswa = DB::table('ekstra_diikuti')
+            ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
+            ->select('siswa.*')
+            ->where('ekstra_id', '=', $id)
+            ->where('tahun_ajaran', '=', $thn_ajaran)
+            ->get();
+
+        $pelatih = DB::table('ekstra_diikuti')
+            ->join('pelatih', 'ekstra_diikuti.user_id', '=', 'pelatih.user_id')
+            ->select('pelatih.*')
+            ->where('ekstra_id', '=', $id)
+            ->where('tahun_ajaran', '=', $thn_ajaran)
+            ->get();
+
+        $detail = DetailEkstra::with('ekstra')->where('id_ekstra', $id)->where('tahun_ajaran', $thn_ajaran)->first();
+        $guru = Pelatih::all();
+
+        if(!$detail){
+                $ekstra = Ekstra::where('id', $id)->first();
+                return view('Kesiswaan.editekstra', ['id'=>$id, 'ekstra'=>$ekstra, 'guru' => $guru, 'pelatih'=>$pelatih, 'siswa'=>$siswa, 'thn'=>$thn_ajaran]);
+            }
+        return view('Kesiswaan.editekstra', ['id'=>$id, 'ekstra'=>$detail, 'guru' => $guru, 'pelatih' => $pelatih, 'siswa' => $siswa, 'thn' => $thn_ajaran]);
     }
 
 
@@ -81,6 +107,7 @@ class EkstraController extends Controller
             'nama_ekstra'=>'required',
             'kode_ekstra'=>'required',
             'deskripsi_ekstra'=>'required',
+            'tahun_ajaran'=>'required',
             'id'=>'required',
             'hari'=>'required',
             'waktu_mulai'=>'required',
@@ -89,6 +116,7 @@ class EkstraController extends Controller
             'nama_ekstra.required'=>'Harap Isi Nama Ekstrakurikuler',
             'kode_ekstra.required'=>'Harap Isi Kode Ekstrakurikuler',
             'deskripsi_ekstra.required'=>'Harap Isi Deskripsi Ekstrakurikuler',
+            'tahun_ajaran.required'=>'Harap Isi Tahun Ajaran Ekstrakurikuler',
             'hari.required'=>'Harap Isi Hari Ekstrakurikuler',
             'id.required'=>'Terjadi Kesalahan',
             'waktu_mulai.required'=>'Harap Isi Waktu Mulai Ekstrakurikuler',
@@ -105,6 +133,7 @@ class EkstraController extends Controller
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
             return redirect()->back();
         } else {
+
             $ekstra = Ekstra::find($id);
             $updetail = [
                 'id_ekstra'=>$request->id,
@@ -113,6 +142,7 @@ class EkstraController extends Controller
                 'waktu_mulai'=>$request->waktu_mulai,
                 'waktu_selesai'=>$request->waktu_selesai,
             ];
+
             $updata = [
                 'kode_ekstra'=>$request->kode_ekstra,
                 'nama_ekstra'=>$request->nama_ekstra,
@@ -122,19 +152,45 @@ class EkstraController extends Controller
             if($ekstra){
                 $details = DetailEkstra::where('id_ekstra', $id)->first();
                 if($details){
-                    DetailEkstra::where('id_ekstra', $id)->update($updetail);
-                } else{
-                    DetailEkstra::create($updetail);
+                    $pertahun = DetailEkstra::where('tahun_ajaran', $request->tahun_ajaran)->first();
+                    if($pertahun){
+                        DetailEkstra::where('id_ekstra', $id)->update($updetail);
+                    } else {
+                        DetailEkstra::create($updetail);
+                        $thn_ajaran =  str_replace('/', '-', $request->tahun_ajaran);
+                        Alert::success('Berhasil Mengubah', 'Berhasil Mengubah Ekstrakurikuler');
+                        return redirect('/kesiswaan/ekstra/'.$request->id.'/'.$thn_ajaran);
+                    }
                 }
                 Ekstra::where('id', $id)->update($updata);
                 Alert::success('Berhasil Mengubah', 'Berhasil Mengubah Ekstrakurikuler');
             }
         }
 
-
+        $thn_ajaran =  str_replace('/', '-', $request->tahun_ajaran);
+        return redirect('/kesiswaan/ekstra/'.$request->id.'/'.$thn_ajaran);
         // Jika gagal mengubah
-        return redirect('/kesiswaan/ekstra/'.$request->id);
-        // Check whether the tahun_ajaran is the current one, is not, create new data.
+    }
+
+    public function assign(Request $request, string $id){
+        $user_id = User::where('username', $request->id)->first()->id;
+        // Check if user with those excact data isnt there
+        $data = DB::table('ekstra_diikuti')
+                ->where('user_id', $user_id)->where('ekstra_id', $request->ekstra_id)->where('tahun_ajaran', $request->tahun_ajaran)->first();
+
+        if(!$data){
+            DB::table('ekstra_diikuti')->insert([
+                'user_id' => $user_id, 
+                'tahun_ajaran' => $request->tahun_ajaran,
+                'ekstra_id' => $request->ekstra_id,
+            ]);
+
+            toast('Data Berhasil Ditambahkan','success');
+            return redirect('/kesiswaan/ekstra/'.$id);
+        }
+
+        Alert::warning('Perhatian', 'Ekstrakurikuler Telah Ditambahkan');
+        return redirect('/kesiswaan/ekstra/'.$id);
     }
 
     

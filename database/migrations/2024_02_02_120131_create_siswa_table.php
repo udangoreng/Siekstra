@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('tahun_pelajaran');
             $table->string('nomor_hp_siswa');
             $table->string('alamat_siswa');
-            $table->string('nilai')->nullable();
             $table->timestamps();
         });
     }

@@ -9,12 +9,12 @@ class Ekstra extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    public $table='ekstra';
+    public $table = 'ekstra';
     protected $fillable = ['kode_ekstra', 'nama_ekstra', 'deskripsi_ekstra'];
 
     public function siswa()
     {
-        return $this->belongsToMany(Siswa::class, 'ekstra_diikuti', 'user_id', 'ekstra_id', 'user_id');
+        return $this->belongsToMany(Siswa::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id');
     }
 
     public function pelatih()
@@ -22,8 +22,8 @@ class Ekstra extends Model
         return $this->belongsToMany(Pelatih::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id');
     }
 
-    public function absen()
+    public function absensi()
     {
-        return $this->belongsToMany(Pelatih::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id');
+        return $this->hasMany(DetailAbsen::class, 'ekstra_id', 'id');
     }
 }

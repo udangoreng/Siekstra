@@ -104,6 +104,16 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="mb-3 me-4">
+                            <label class="form-label fw-semibold">Tahun Ajaran</label>
+                            <select name="tahun_ajaran" class="form-select" aria-label="Default select example">
+                                @foreach (range(2022, 2050) as $item)
+                                    <option value="{{ $item }}/{{ $item + 1 }}">
+                                        {{ $item }} / {{ $item + 1 }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Batal</button>
@@ -112,6 +122,5 @@
                 </form>
             </div>
         </div>
-    </div>
     </div>
 @endsection

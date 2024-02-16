@@ -16,8 +16,7 @@ class PelatihController extends Controller
 {
     public function index(){
         $data = Pelatih::with('ekstra')->paginate(25);
-        $ekstra = Ekstra::all();
-        return view('Kesiswaan.pelatih', ['pelatih'=>$data, 'ekstra'=>$ekstra]);
+        return view('Kesiswaan.pelatih', ['pelatih'=>$data]);
     }
 
     public function store(Request $request)
@@ -67,13 +66,6 @@ class PelatihController extends Controller
                         'nomor_hp_pelatih' => $request->nomor_hp_pelatih,
                         'alamat_pelatih' => $request->alamat_pelatih,
                     ]);
-
-                    if($request->ekstra_id != "-"){
-                        DB::table('ekstra_diikuti')->insert([
-                            'user_id' => $userdata->id,
-                            'ekstra_id' => $request->ekstra_id,
-                        ]);
-                    };
                     
                     if($data){
                         toast('Data Berhasil Ditambahkan','success');
@@ -123,6 +115,7 @@ class PelatihController extends Controller
         if(!$data){
             DB::table('ekstra_diikuti')->insert([
                 'user_id' => $request->id, 
+                'tahun_ajaran' => $request->tahun_ajaran,
                 'ekstra_id' => $request->ekstra_id,
             ]);
 

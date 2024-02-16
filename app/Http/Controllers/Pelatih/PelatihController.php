@@ -14,4 +14,10 @@ class PelatihController extends Controller
         $ekstra = Pelatih::with('ekstra')->where('user_id', Auth::user()->id)->first();
         return view('pelatih.index', ['username'=> $usn, 'data'=>$ekstra]);
     }
+
+    public function profil(){
+        $user = Auth::user();
+        $data = Pelatih::where('user_id', $user->id)->with('ekstra')->first();
+        return view('Pelatih.profil', ['user'=> $user, 'data'=>$data]);
+    }
 }

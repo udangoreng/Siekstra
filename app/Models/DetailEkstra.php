@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class DetailEkstra extends Model
 {
     use HasFactory;
-    public $table='detail_ekstra';
+    public $table = 'detail_ekstra';
     protected $fillable = ['id_ekstra', 'pelatih_id', 'tahun_ajaran', 'hari', 'waktu_mulai', 'waktu_selesai'];
 
     public function ekstra()
     {
         return $this->belongsTo(Ekstra::class, 'id_ekstra', 'id');
+    }
+
+    public function absensi()
+    {
+        return $this->hasMany(DetailAbsen::class, 'ekstra_id', 'id_ekstra');
     }
 }

@@ -3,7 +3,7 @@
 @section('main')
     <div class="kesiswaan-section">
         <div class="d-flex justify-content-between mt-2 me-5 align-items-center">
-            <h2 class="fw-bolder">Absensi Siswa</h2>
+            <h2 class="fw-bolder">Daftar Absensi</h2>
             @include('Kesiswaan.addabsensi')
         </div>
         <div class="card p-3 mt-5 me-5 shadow-sm">
@@ -34,7 +34,7 @@
                             <td>{{ $item->waktu_selesai }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <a href="/kesiswaan/absensi/{{ $item->id }}">
+                                    <a href="/kesiswaan/kegiatan/{{ $item->id }}">
                                         <div class="mx-3">
                                             <svg width="20" height="20" viewBox="0 0 506 506" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -45,19 +45,43 @@
                                         </div>
                                     </a>
                                     <div>
-                                        <svg width="15" height="20" viewBox="0 0 511 582" fill="none"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <g clip-path="url(#clip0_14_4)">
-                                                <path
-                                                    d="M154.212 20.1199L146 36.375H36.5C16.3109 36.375 0 52.6301 0 72.75C0 92.8699 16.3109 109.125 36.5 109.125H474.5C494.689 109.125 511 92.8699 511 72.75C511 52.6301 494.689 36.375 474.5 36.375H365L356.787 20.1199C350.628 7.72969 337.967 0 324.166 0H186.834C173.033 0 160.372 7.72969 154.212 20.1199ZM474.5 145.5H36.5L60.6813 530.848C62.5063 559.607 86.4594 582 115.317 582H395.683C424.541 582 448.494 559.607 450.319 530.848L474.5 145.5Z"
-                                                    fill="#828282" />
-                                            </g>
-                                            <defs>
-                                                <clipPath id="clip0_14_4">
-                                                    <rect width="511" height="582" fill="white" />
-                                                </clipPath>
-                                            </defs>
-                                        </svg>
+                                        <div data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
+                                            <svg width="15" height="20" viewBox="0 0 511 582" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0_14_4)">
+                                                    <path
+                                                        d="M154.212 20.1199L146 36.375H36.5C16.3109 36.375 0 52.6301 0 72.75C0 92.8699 16.3109 109.125 36.5 109.125H474.5C494.689 109.125 511 92.8699 511 72.75C511 52.6301 494.689 36.375 474.5 36.375H365L356.787 20.1199C350.628 7.72969 337.967 0 324.166 0H186.834C173.033 0 160.372 7.72969 154.212 20.1199ZM474.5 145.5H36.5L60.6813 530.848C62.5063 559.607 86.4594 582 115.317 582H395.683C424.541 582 448.494 559.607 450.319 530.848L474.5 145.5Z"
+                                                        fill="#828282" />
+                                                </g>
+                                                <defs>
+                                                    <clipPath id="clip0_14_4">
+                                                        <rect width="511" height="582" fill="white" />
+                                                    </clipPath>
+                                                </defs>
+                                            </svg>
+                                        </div>
+                                        <div class="modal fade" id="deleteModal{{ $item->id }}" tabindex="-1"
+                                            aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Hapus
+                                                            Absensi</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>Yakin Menghapus Absensi?</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Kembali</button>
+                                                        <a type="submit" class="btn btn-danger"
+                                                            href="/kesiswaan/kegiatan/delete/{{ $item->id }}">Hapus</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </td>

@@ -29,7 +29,7 @@
                         <select class="form-select" name="kategori" aria-label="Default select example">
                             <option value="Pertemuan Rutin">Pertemuan Rutin</option>
                             <option value="Kegiatan">Kegiatan</option>
-                            <option value="Khusus">Khusus</option>
+                            <option value="Pendaftaran">Pendaftaran</option>
                         </select>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
@@ -54,6 +54,10 @@
                             <input type="time" class="form-control" name="waktu_selesai"
                                 id="exampleFormControlInput1">
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea1" class="form-label">Deskripsi Absensi</label>
+                        <textarea class="form-control" name="deskripsi" id="exampleFormControlTextarea1" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -15,6 +15,7 @@
 </head>
 
 <body>
+    @include('sweetalert::alert')
     <div class="d-flex">
         @include('partials.pelatih.sidebar')
         @include('partials.pelatih.navbar')

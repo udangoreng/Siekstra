@@ -112,7 +112,7 @@
                     <div id="absensi" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                         <div class="accordion-body ms-5">
                             <a href="/kesiswaan/kegiatan" class="text-white">
-                                <h5>Mendatang</h5>
+                                <h5>Kegiatan</h5>
                             </a>
                         </div>
                         <div class="accordion-body ms-5">
@@ -140,7 +140,7 @@
                     </svg>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="/kesiswaan/pelatih">Mendatang</a></li>
+                    <li><a class="dropdown-item" href="/kesiswaan/pelatih">Kegiatan</a></li>
                     <li><a class="dropdown-item" href="#">Absensi</a></li>
                 </ul>
             </div>
@@ -168,7 +168,7 @@
             </li>
             <li class="sidebar-item my-3">
                 <div class="d-flex">
-                    <a class="sidebar-link text-white d-flex align-items-center" href="/kesiswaan/ekstra">
+                    <a class="sidebar-link text-white d-flex align-items-center" href="/kesiswaan/jurnal">
                         <div class="me-2">
                             <svg width="22" height="25" viewBox="0 0 448 512" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
