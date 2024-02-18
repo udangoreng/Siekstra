@@ -10,10 +10,10 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Tambah Pelatih</h1>
+                <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Tambah Kesiswaan</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="/kesiswaan/pelatih/add" method="POST">
+            <form action="/kesiswaan/kesiswaan/add" method="POST">
                 <div class="modal-body">
                     @csrf
                     <div class="mb-3">
@@ -22,16 +22,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Nama</label>
-                        <input type="text" class="form-control" name="nama_pelatih" id="exampleFormControlInput1">
+                        <input type="text" class="form-control" name="nama" id="exampleFormControlInput1">
                     </div>
                     <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Nomor HP</label>
-                        <input type="text" class="form-control" name="nomor_hp_pelatih"
-                            id="exampleFormControlInput1">
-                    </div>
-                    <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">Alamat</label>
-                        <textarea type="text" class="form-control" name="alamat_pelatih" rows=3 id="exampleFormControlInput1"></textarea>
+                        <label for="exampleFormControlInput1" class="form-label">Email</label>
+                        <input type="text" class="form-control" name="email" id="exampleFormControlInput1">
                     </div>
                 </div>
                 <div class="modal-footer">

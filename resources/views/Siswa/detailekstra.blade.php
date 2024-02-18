@@ -127,7 +127,11 @@
             <div class="card-body">
                 <p class="fw-bold">Anggota</p>
                 @foreach ($siswa as $item)
-                    {{ $item->nama_siswa }}
+                    @if ($item->nama_siswa == $user)
+                        - {{ $item->nama_siswa }} (Saya)
+                    @else
+                        - {{ $item->nama_siswa }}
+                    @endif
                 @endforeach
             </div>
         </div>

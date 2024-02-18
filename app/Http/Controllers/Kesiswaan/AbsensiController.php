@@ -53,9 +53,14 @@ class AbsensiController extends Controller
             }
 
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
-            return redirect()->back();
+            return redirect('/kesiswaan/kegiatan');
         } else {
-            $code = Ekstra::where('id', $request->ekstrakurikuler)->first()->kode_ekstra.Carbon::now()->format('dmY');
+
+            if($request->tanggal_selesai < $request->tanggal_mulai){
+                Alert::error('Terjadi Kesalahan', 'Tanggal Tutup Tidak Bisa Lebih Dahulu Dibanding Tanggal Buka!');
+                return redirect('/kesiswaan/kegiatan');
+            }
+            $code = Ekstra::where('id', $request->ekstrakurikuler)->first()->kode_ekstra.strtotime(Carbon::now());
 
             $data = DetailAbsen::create([
                 'absensi_id'=>$code,
@@ -111,7 +116,7 @@ class AbsensiController extends Controller
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
             return redirect()->back();
         } else {
-            $code = Ekstra::where('id', $request->ekstrakurikuler)->first()->kode_ekstra.Carbon::now()->format('dmY');
+            $code = Ekstra::where('id', $request->ekstrakurikuler)->first()->kode_ekstra.strtotime(Carbon::now());
             $absen = DetailAbsen::where('id', $request->id)->first();
             $updata = [
                 'absensi_id'=>$code,

@@ -10,7 +10,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Tambah Ekstrakurikuler</h1>
+                <h1 class="modal-title fs-5 fw-bold" id="exampleModalLabel">Tambah Siswa</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="/kesiswaan/siswa/add" method="POST">
@@ -30,7 +30,13 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Tahun Ajaran</label>
-                        <input type="text" class="form-control" name="tahun_pelajaran" id="exampleFormControlInput1">
+                        <select name="tahun_pelajaran" class="form-select" aria-label="Default select example">
+                            @foreach (range(date('Y') - 1, 2050) as $item)
+                                <option value="{{ $item }}/{{ $item + 1 }}">
+                                    {{ $item }} / {{ $item + 1 }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Nomor Handphone</label>

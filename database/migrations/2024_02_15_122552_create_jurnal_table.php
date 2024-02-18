@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('jurnal', function (Blueprint $table) {
             $table->id();
             $table->foreignId('ekstra_id')->constrained('ekstra')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('pelatih_id')->constrained('pelatih')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('absensi_id')->constrained('pelatih')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('absensi_id');
             $table->string('judul');
             $table->string('jenis_kegiatan');
             $table->string('lokasi');
             $table->date('tanggal');
-            $table->string('deskripsi');
+            $table->text('deskripsi');
             $table->timestamps();
         });
     }

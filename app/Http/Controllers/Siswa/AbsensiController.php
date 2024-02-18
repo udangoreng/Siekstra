@@ -37,6 +37,7 @@ class AbsensiController extends Controller
                     'status' => 'Pending',
                     'keterangan' => $request->keterangan,
                 ]);
+        
 
                 if($absen){
                     Alert::success('Sukses', 'Absensi Anda Telah Dicatat');

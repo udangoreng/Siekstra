@@ -94,7 +94,7 @@
                                     <h4 class="fw-semibold text-black mb-2">{{ $item['ekstra']['nama_ekstra'] }}</h4>
                                     <p class="text-black">{{ $item['deskripsi'] }}</p>
                                 </a>
-                                @if ($item['kategori'] == 'Khusus')
+                                @if ($item['kategori'] == 'Pendaftaran')
                                     <button type="button" class="btn btn-green mt-3" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal{{ $item['ekstra']['id'] }}">
                                         Lihat Detail
@@ -116,6 +116,8 @@
                                                         <p class="fw-bold mb-4">Mendaftar Ke Ekstrakurikuler Ini?</p>
                                                         <input type="text" name="ekstra_id"
                                                             value="{{ $item['ekstra']['id'] }}" readonly hidden>
+                                                        <input type="text" name="absensi_id"
+                                                            value="{{ $item['absensi_id'] }}" readonly hidden>
                                                         <input type="text" name="user_id" value="{{ $siswa->user_id }}"
                                                             readonly hidden>
                                                         <div class="mb-3">

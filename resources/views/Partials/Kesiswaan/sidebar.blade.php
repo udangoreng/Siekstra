@@ -34,7 +34,9 @@
                     </h2>
                     <div id="akun" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
                         <div class="accordion-body ms-5">
-                            <h5>Kesiswaan</h5>
+                            <a href="/kesiswaan/kesiswaan" class="text-white">
+                                <h5>Kesiswaan</h5>
+                            </a>
                         </div>
                         <div class="accordion-body ms-5">
                             <a href="/kesiswaan/pelatih" class="text-white">
@@ -59,7 +61,7 @@
                     </svg>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#">Kesiswaan</a></li>
+                    <li><a class="dropdown-item" href="/kesiswaan/kesiswaan">Kesiswaan</a></li>
                     <li><a class="dropdown-item" href="/kesiswaan/pelatih">Pelatih</a></li>
                     <li><a class="dropdown-item" href="#">Siswa</a></li>
                 </ul>

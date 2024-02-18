@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
+use App\Models\Absensi;
 use App\Models\DetailAbsen;
 use App\Models\DetailEkstra;
 use App\Models\Ekstra;
@@ -64,6 +65,13 @@ class EkstraController extends Controller
                 'ekstra_id' => $request->ekstra_id,
             ]);
 
+            $absen = Absensi::create([
+                'absensi_id' => $request->absensi_id,
+                'user_id' => $request->user_id,
+                'ekstra_id' => $request->ekstra_id,
+                'status' => 'Dikonfirmasi',
+                'keterangan' => 'Hadir',
+            ]);
             toast('Data Berhasil Ditambahkan','success');
             return redirect('/siswa/ekstra/');
         }
@@ -75,6 +83,7 @@ class EkstraController extends Controller
     public function show(string $id, string $thn)
     {
         $current_date = Carbon::now()->toDateString();
+        $user = Auth::user()->name;
         $thn_ajaran =  str_replace('-', '/', $thn);
         $absensi = DetailAbsen::where('ekstra_id', $id)->where('tanggal_selesai', '>=', $current_date)->where('tanggal_mulai', "<=", $current_date)->where('kategori', "!=", 'Pendaftaran')->get()->toArray();
         $ekstra = DetailEkstra::with('ekstra')->where('id_ekstra', $id)->where('tahun_ajaran', $thn_ajaran)->first();
@@ -94,6 +103,6 @@ class EkstraController extends Controller
             ->where('ekstra_id', '=', $id)
             ->where('tahun_ajaran', '=', $thn_ajaran)
             ->get();
-        return view('Siswa.detailekstra', ['ekstra' => $ekstra, 'siswa'=>$siswa, 'pelatih'=>$pelatih, 'absensi'=>$absensi]);
+        return view('Siswa.detailekstra', ['ekstra' => $ekstra, 'siswa'=>$siswa, 'pelatih'=>$pelatih, 'absensi'=>$absensi, 'user'=>$user]);
     }
 }

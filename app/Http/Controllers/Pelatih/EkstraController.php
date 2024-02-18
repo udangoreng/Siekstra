@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailAbsen;
 use App\Models\DetailEkstra;
 use App\Models\Ekstra;
+use App\Models\Jurnal;
 use App\Models\Pelatih;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,11 +52,13 @@ class EkstraController extends Controller
     {
         $current_date = Carbon::now()->toDateString();
         $thn_ajaran =  str_replace('-', '/', $thn);
-        $absensi = DetailAbsen::where('ekstra_id', $id)->where('tanggal_selesai', '>=', $current_date)->where('tanggal_mulai', "<=", $current_date)->where('kategori', "!=", 'Pendaftaran')->get()->toArray();
+        $absensi = DetailAbsen::where('ekstra_id', $id)->where('tanggal_selesai', '>=', $current_date)->where('tanggal_mulai', "<=", $current_date)->get()->toArray();
         $ekstra = DetailEkstra::with('ekstra')->where('id_ekstra', $id)->where('tahun_ajaran', $thn_ajaran)->first();
         if(!$ekstra){
             $ekstra = Ekstra::where('id', $id)->first();
         }
+
+        // $jurnal = Jurnal::where('ekstra_id', $id)->all();
         $siswa = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
             ->select('siswa.*')

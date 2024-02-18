@@ -1,7 +1,7 @@
 <nav class="navbar bg-green navbar-expand d-sm-none d-md-none d-lg-none d-xl-none fixed-bottom">
     <ul class="navbar-nav nav-justified w-100">
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/pelatih" class="nav-link">
                 <div>
                     <svg width="25" height="25" viewBox="0 0 576 512" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -13,7 +13,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/pelatih/ekstra" class="nav-link">
                 <div>
                     <svg width="25" height="25" viewBox="0 0 384 512" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -32,7 +32,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/pelatih/absen" class="nav-link">
                 <div>
                     <svg width="20" height="25" viewBox="0 0 384 512" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -51,7 +51,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/pelatih/jurnal" class="nav-link">
                 <div>
                     <svg width="22" height="25" viewBox="0 0 448 512" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
@@ -70,7 +70,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="/pelatih/profil" class="nav-link">
                 <div>
                     <svg width="27" height="27" viewBox="0 0 512 512" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
