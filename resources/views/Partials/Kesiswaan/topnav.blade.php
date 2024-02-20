@@ -24,7 +24,7 @@
                         </svg>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Profil</a></li>
+                        {{-- <li><a class="dropdown-item" href="#">Profil</a></li> --}}
                         <li><a class="dropdown-item" href="/logout">Logout</a></li>
                     </ul>
                 </div>

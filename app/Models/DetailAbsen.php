@@ -20,4 +20,10 @@ class DetailAbsen extends Model
     {
         return $this->belongsTo(DetailEkstra::class, 'ekstra_id', 'id_ekstra');   
     }
+
+    public function absensi()
+    {
+        return $this->hasMany(Absensi::class, 'absensi_id', 'absensi_id');
+    }
+
 }

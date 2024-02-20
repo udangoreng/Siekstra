@@ -61,7 +61,7 @@ class EkstraController extends Controller
         // $jurnal = Jurnal::where('ekstra_id', $id)->all();
         $siswa = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
-            ->select('siswa.*')
+            ->select('siswa.*', 'ekstra_diikuti.id as ekstra_diikuti')
             ->where('ekstra_id', '=', $id)
             ->where('tahun_ajaran', '=', $thn_ajaran)   
             ->get();

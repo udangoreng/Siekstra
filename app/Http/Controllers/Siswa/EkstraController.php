@@ -56,28 +56,41 @@ class EkstraController extends Controller
     public function daftar(request $request)
     {
         $data = DB::table('ekstra_diikuti')
-                ->where('user_id', $request->user_id)->where('ekstra_id', $request->ekstra_id)->where('tahun_ajaran', $request->tahun_ajaran)->first();
+                ->where('user_id', $request->user_id)
+                ->where('ekstra_id', $request->ekstra_id)
+                ->where('tahun_ajaran', $request->tahun_ajaran)
+                ->first();
 
-        if(!$data){
-            DB::table('ekstra_diikuti')->insert([
-                'user_id' => $request->user_id, 
-                'tahun_ajaran' => $request->tahun_ajaran,
-                'ekstra_id' => $request->ekstra_id,
-            ]);
+        $banyak = DB::table('ekstra_diikuti')
+                ->where('user_id', $request->user_id)
+                ->where('tahun_ajaran', $request->tahun_ajaran)
+                ->get();
 
-            $absen = Absensi::create([
-                'absensi_id' => $request->absensi_id,
-                'user_id' => $request->user_id,
-                'ekstra_id' => $request->ekstra_id,
-                'status' => 'Dikonfirmasi',
-                'keterangan' => 'Hadir',
-            ]);
-            toast('Data Berhasil Ditambahkan','success');
+        if(count($banyak) > 3){
+            Alert::warning('Perhatian', 'Anda Telah Mendaftar Lebih Dari 3 Ekstra!');
+            return redirect('/siswa/ekstra/');
+        } else {
+            if(!$data){
+                DB::table('ekstra_diikuti')->insert([
+                    'user_id' => $request->user_id, 
+                    'tahun_ajaran' => $request->tahun_ajaran,
+                    'ekstra_id' => $request->ekstra_id,
+                ]);
+
+                $absen = Absensi::create([
+                    'absensi_id' => $request->absensi_id,
+                    'user_id' => $request->user_id,
+                    'ekstra_id' => $request->ekstra_id,
+                    'status' => 'Dikonfirmasi',
+                    'keterangan' => 'Hadir',
+                ]);
+                toast('Data Berhasil Ditambahkan','success');
+                return redirect('/siswa/ekstra/');
+            }
+
+            Alert::warning('Perhatian', 'Anda Telah Terdaftar di Ekstrakurikuler Ini');
             return redirect('/siswa/ekstra/');
         }
-
-        Alert::warning('Perhatian', 'Anda Telah Mendaftar Ekstrakurikuler Ini');
-        return redirect('/siswa/ekstra/');
     }
 
     public function show(string $id, string $thn)

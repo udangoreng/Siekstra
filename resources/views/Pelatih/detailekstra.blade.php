@@ -171,21 +171,10 @@
             <div class="card-body">
                 <p class="fw-bold">Anggota</p>
                 @foreach ($siswa as $item)
-                    - {{ $item->nama_siswa }} <br />
+                    <a href="/pelatih/siswa/{{ $item->ekstra_diikuti }}">
+                        <p>- {{ $item->nama_siswa }}</p>
+                    </a>
                 @endforeach
-            </div>
-        </div>
-
-        <div class="card my-2">
-            <div class="card-body">
-                <p class="fw-bold">Jurnal</p <div class="card">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <p>Id Absensi</p>
-                        <p>Tanggal buat</p>
-                    </div>
-                    <p>Judul</p>
-                </div>
             </div>
         </div>
     </div>

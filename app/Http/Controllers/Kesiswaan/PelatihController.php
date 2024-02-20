@@ -14,9 +14,15 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class PelatihController extends Controller
 {
-    public function index(){
-        $data = Pelatih::with('ekstra')->paginate(25);
-        return view('Kesiswaan.pelatih', ['pelatih'=>$data]);
+    public function index(request $request){
+        $pelatih = Pelatih::with('ekstra')->paginate(25);
+        if($request->cari){
+            $pelatih = Pelatih::with('ekstra')
+            ->where('nama_pelatih', 'LIKE', '%'.$request->cari.'%')
+            ->orWhere('nip', $request->cari)
+            ->paginate(25);
+        }
+        return view('Kesiswaan.pelatih', compact('pelatih'));
     }
 
     public function store(Request $request)

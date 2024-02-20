@@ -3,14 +3,42 @@
 @section('main')
     <div class="section">
         <div class="d-flex justify-content-between mb-3">
-            <h2>Jurnal</h2>
-            <div class="d-flex me-5">
-                <div class="me-3">
-                    <svg width="25" height="25" viewBox="0 0 506 506" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="d-flex">
+                <a class="me-3" href="/pelatih/jurnal">
+                    <svg width="15" height="27" viewBox="0 0 225 385" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
-                            d="M470.679 16.3929C448.822 -5.46431 413.491 -5.46431 391.634 16.3929L361.592 46.3343L459.301 144.043L489.342 114.002C511.2 92.1447 511.2 56.8138 489.342 34.9566L470.679 16.3929ZM172.063 235.963C165.975 242.051 161.284 249.537 158.59 257.82L129.047 346.447C126.153 355.03 128.449 364.512 134.836 370.999C141.224 377.486 150.705 379.682 159.388 376.788L248.015 347.245C256.199 344.551 263.684 339.86 269.872 333.772L436.845 166.699L339.037 68.8902L172.063 235.963ZM95.8125 58.6103C42.916 58.6103 0 101.526 0 154.423V409.923C0 462.819 42.916 505.735 95.8125 505.735H351.312C404.209 505.735 447.125 462.819 447.125 409.923V314.11C447.125 296.445 432.853 282.173 415.188 282.173C397.522 282.173 383.25 296.445 383.25 314.11V409.923C383.25 427.588 368.978 441.86 351.312 441.86H95.8125C78.1471 441.86 63.875 427.588 63.875 409.923V154.423C63.875 136.757 78.1471 122.485 95.8125 122.485H191.625C209.29 122.485 223.562 108.213 223.562 90.5478C223.562 72.8824 209.29 58.6103 191.625 58.6103H95.8125Z"
+                            d="M9.375 169.475C-3.125 181.975 -3.125 202.275 9.375 214.775L169.375 374.775C181.875 387.275 202.175 387.275 214.675 374.775C227.175 362.275 227.175 341.975 214.675 329.475L77.275 192.075L214.575 54.675C227.075 42.175 227.075 21.875 214.575 9.375C202.075 -3.125 181.775 -3.125 169.275 9.375L9.275 169.375L9.375 169.475Z"
                             fill="#828282" />
                     </svg>
+                </a>
+                <h2>Jurnal</h2>
+            </div>
+            <div class="d-flex me-5">
+                <div class="me-3">
+                    <form action="/pelatih/jurnal/download" method="post">
+                        @csrf
+                        <input type="text" name="type" readonly hidden />
+                        <input type="text" name="id" value={{ $jurnal->id }} readonly hidden />
+                        <input type="text" name="month" readonly hidden />
+                        <button type="submit" style="background-color: transparent; border: none;">
+                            <svg width="25" height="25" viewBox="0 0 512 512" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_132_2)">
+                                    <path
+                                        d="M288 32C288 14.3 273.7 0 256 0C238.3 0 224 14.3 224 32V274.7L150.6 201.3C138.1 188.8 117.8 188.8 105.3 201.3C92.8 213.8 92.8 234.1 105.3 246.6L233.3 374.6C245.8 387.1 266.1 387.1 278.6 374.6L406.6 246.6C419.1 234.1 419.1 213.8 406.6 201.3C394.1 188.8 373.8 188.8 361.3 201.3L288 274.7V32ZM64 352C28.7 352 0 380.7 0 416V448C0 483.3 28.7 512 64 512H448C483.3 512 512 483.3 512 448V416C512 380.7 483.3 352 448 352H346.5L301.2 397.3C276.2 422.3 235.7 422.3 210.7 397.3L165.5 352H64ZM432 408C438.365 408 444.47 410.529 448.971 415.029C453.471 419.53 456 425.635 456 432C456 438.365 453.471 444.47 448.971 448.971C444.47 453.471 438.365 456 432 456C425.635 456 419.53 453.471 415.029 448.971C410.529 444.47 408 438.365 408 432C408 425.635 410.529 419.53 415.029 415.029C419.53 410.529 425.635 408 432 408Z"
+                                        fill="#828282" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_132_2">
+                                        <rect width="512" height="512" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                <div class="me-3">
+                    @include('pelatih.editjurnal')
                 </div>
                 <div>
                     <svg width="20" height="25" viewBox="0 0 511 582" fill="none" data-bs-toggle="modal"
@@ -57,32 +85,66 @@
                 <p class="mx-2">|</pc>
                 <p>{{ $jurnal->tanggal }}</p>
             </div>
-            <div>
-                <div class="d-flex mb-3">
-                    <div class="me-5">
-                        <p class="fw-semibold">Kegiatan ID</p>
-                        <p>{{ $jurnal['detail']->absensi_id }}</p>
+            <div class="container">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                    <div class="col">
+                        <div class="mb-3">
+                            <p class="fw-semibold">Kegiatan ID</p>
+                            <p>{{ $jurnal['detail']->absensi_id }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <p class="fw-semibold">Nama Ekstrakurikuler</p>
-                        <p>{{ $jurnal['ekstra']->nama_ekstra }}</p>
+                    <div class="col">
+                        <div class="mb-3">
+                            <p class="fw-semibold">Nama Ekstrakurikuler</p>
+                            <p>{{ $jurnal['ekstra']->nama_ekstra }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="mb-3">
-                    <p class="fw-semibold">Lokasi</p>
-                    <p>{{ $jurnal->lokasi }}</p>
-                </div>
-                <div class="mb-3">
-                    <p class="fw-semibold">Jenis Kegiatan</p>
-                    <p>{{ $jurnal->jenis_kegiatan }}</p>
+                    <div class="col">
+                        <div class="mb-3">
+                            <p class="fw-semibold">Lokasi</p>
+                            <p>{{ $jurnal->lokasi }}</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mb-3">
+                            <p class="fw-semibold">Jenis Kegiatan</p>
+                            <p>{{ $jurnal->jenis_kegiatan }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="mb-5">
-                <p class="fw-semibold">Deskripsi</p>
-                {{ $jurnal->deskripsi }}
+            <div style="border-bottom: 3px solid #d8d6d6; margin-right: 2.5rem; margin-bottom: 1.5rem; margin-top: 0.5rem;">
+            </div>
+            <div class="mb-3">
+                <h5 class="fw-semibold">Deskripsi Kegiatan</h5>
+                <p style="white-space: pre-line; text-align: justify; margin-right: 2.5rem;">{{ $jurnal->deskripsi }}</p>
+            </div>
+            <div style="border-bottom: 3px solid #d8d6d6; margin-right: 2.5rem; margin-bottom: 1.5rem; margin-top: 0.5rem;">
             </div>
             <div>
-                List Kehadiran
+                <h5 class="fw-semibold">Daftar Absensi Siswa</h5>
+                <div class="table-responsive">
+                    <table class="table" style="width: 60%">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nama Siswa</th>
+                                <th scope="col">Kelas</th>
+                                <th scope="col">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($hadir as $item)
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration }}</th>
+                                    <td>{{ $item['siswa']->nama_siswa }}</td>
+                                    <td>{{ $item['siswa']->kelas }}</td>
+                                    <td>{{ $item->keterangan }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

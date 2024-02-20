@@ -5,6 +5,29 @@
         <div class="d-flex justify-content-between mt-2 me-5 align-items-center">
             <h2 class="fw-bolder">Jurnal</h2>
         </div>
+        <form class="d-flex justify-content-end me-5 align-items-end" role="search" action="/kesiswaan/absen">
+            <div class="me-2">
+                <label for="exampleFormControlInput1" class="form-label">Tanggal Mulai</label>
+                <input class="form-control" type="date" name="tanggal_mulai" aria-label="Search">
+            </div>
+            <div class="me-2">
+                <label for="exampleFormControlInput1" class="form-label">Tanggal Selesai</label>
+                <input class="form-control" type="date" name="tanggal_selesai" aria-label="Search">
+            </div>
+            <div class="me-2">
+                <label for="exampleFormControlInput1" class="form-label">Ekstrakurikuler</label>
+                <select class="form-select" name="ekstra" aria-label="Default select example">
+                    <option selected>Ekstrakurikuler</option>
+                    @foreach ($ekstra as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama_ekstra }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="d-flex h-50 align-items-center">
+                <input class="form-control me-2" type="search" placeholder="Cari" name="cari" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Cari</button>
+            </div>
+        </form>
         <div class="card p-3 mt-5 me-5 shadow-sm">
             <table class="table table-striped">
                 <thead>
@@ -109,6 +132,32 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="me-3">
+                                        <form action="/kesiswaan/jurnal/download" method="post">
+                                            @csrf
+                                            <input type="text" name="type" readonly hidden />
+                                            <input type="text" name="id" value={{ $item->id }} readonly
+                                                hidden />
+                                            <input type="text" name="month" readonly hidden />
+                                            <button type="submit" style="background-color: transparent; border: none;">
+                                                <svg width="25" height="25" viewBox="0 0 512 512" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <g clip-path="url(#clip0_132_2)">
+                                                        <path
+                                                            d="M288 32C288 14.3 273.7 0 256 0C238.3 0 224 14.3 224 32V274.7L150.6 201.3C138.1 188.8 117.8 188.8 105.3 201.3C92.8 213.8 92.8 234.1 105.3 246.6L233.3 374.6C245.8 387.1 266.1 387.1 278.6 374.6L406.6 246.6C419.1 234.1 419.1 213.8 406.6 201.3C394.1 188.8 373.8 188.8 361.3 201.3L288 274.7V32ZM64 352C28.7 352 0 380.7 0 416V448C0 483.3 28.7 512 64 512H448C483.3 512 512 483.3 512 448V416C512 380.7 483.3 352 448 352H346.5L301.2 397.3C276.2 422.3 235.7 422.3 210.7 397.3L165.5 352H64ZM432 408C438.365 408 444.47 410.529 448.971 415.029C453.471 419.53 456 425.635 456 432C456 438.365 453.471 444.47 448.971 448.971C444.47 453.471 438.365 456 432 456C425.635 456 419.53 453.471 415.029 448.971C410.529 444.47 408 438.365 408 432C408 425.635 410.529 419.53 415.029 415.029C419.53 410.529 425.635 408 432 408Z"
+                                                            fill="#828282" />
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id="clip0_132_2">
+                                                            <rect width="512" height="512" fill="white" />
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    </div>
+
                                     <div>
                                         <div data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
                                             <svg width="15" height="20" viewBox="0 0 511 582" fill="none"

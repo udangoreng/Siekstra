@@ -13,17 +13,54 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AbsensiController extends Controller
 {
-    public function absensi()
+    public function absensi(request $request)
     {
-        $absen = Absensi::with('user', 'ekstra')->paginate('25');
-        return view('Kesiswaan.absensi', ['absen'=>$absen]);
+        $absen = Absensi::with('user', 'ekstra')->paginate(25);
+        $ekstra = Ekstra::all();
+        if($request->cari or $request->ekstra){
+            $absen = Absensi::where('ekstra_id', $request->ekstra)
+            ->orWhere('absensi_id', 'LIKE', '%'.$request->cari.'%')
+            ->orWhere('keterangan', $request->cari)
+            ->orWhere('status', $request->cari)
+            ->paginate(25);
+        }
+
+        if($request->tanggal_mulai){
+            $absen = Absensi::where('created_at', '>=', $request->tanggal_mulai)
+            ->paginate(25);
+        }
+
+        if($request->tanggal_selesai){
+            $absen = Absensi::where('created_at', '<', $request->tanggal_selesai)
+            ->paginate(25);
+        }
+
+        return view('Kesiswaan.absensi', compact('ekstra', 'absen'));
     }
 
-    public function kegiatan()
+    public function kegiatan(request $request)
     {
         $ekstra = Ekstra::all();
-        $absen = DetailAbsen::with('ekstra')->get();
-        return view('Kesiswaan.kegiatan', ['ekstra'=>$ekstra, 'absen'=>$absen]);
+        $absen = DetailAbsen::with('ekstra')->paginate(25);
+        if($request->cari or $request->ekstra){
+            $absen = DetailAbsen::with('ekstra')
+            ->where('ekstra_id', $request->ekstra)
+            ->orWhere('kategori', $request->cari)
+            ->orWhere('absensi_id', $request->cari)
+            ->paginate(25);
+        }
+
+        if($request->tanggal_mulai){
+            $absen = DetailAbsen::where('tanggal_mulai', '>=', $request->tanggal_mulai)
+            ->paginate(25);
+        }
+
+        if($request->tanggal_selesai){
+            $absen = DetailAbsen::where('tanggal_selesai', '<=', $request->tanggal_selesai)
+            ->paginate(25);
+        }
+
+        return view('Kesiswaan.kegiatan', compact('ekstra', 'absen'));
     }
 
     public function store(Request $request)

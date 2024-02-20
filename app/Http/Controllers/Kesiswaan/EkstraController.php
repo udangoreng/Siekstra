@@ -16,18 +16,23 @@ use RealRashid\SweetAlert\Facades\Alert;
 class EkstraController extends Controller
 {
     
-    public function index()
+    public function index(request $request)
     {
-        $data = Ekstra::with('pelatih', 'siswa')->get();
+        $data = Ekstra::with('pelatih', 'siswa')->paginate(25);
         $month = Carbon::now()->month;
         if ($month >= 7){
-            $thn_ajaran = Carbon::now()->year."-".(Carbon::now()->year)+1;
+            $thn = Carbon::now()->year."-".(Carbon::now()->year)+1;
         } else {
-            $thn_ajaran = ((Carbon::now()->year)-1)."-".(Carbon::now()->year);
+            $thn = ((Carbon::now()->year)-1)."-".(Carbon::now()->year);
         }
-        return view('Kesiswaan.ekstra', ['data'=>$data, 'thn'=>$thn_ajaran]);
 
-        //Filter
+        if($request->cari){
+            $data = Ekstra::with('pelatih', 'siswa')
+            ->where('nama_ekstra', $request->cari)
+            ->orWhere('kode', $request->cari)
+            ->paginate(25);
+        }
+        return view('Kesiswaan.ekstra', compact('data', 'thn'));
     }
 
     
@@ -150,27 +155,23 @@ class EkstraController extends Controller
             ];
 
             if($ekstra){
-                $details = DetailEkstra::where('id_ekstra', $id)->first();
-                if($details){
-                    $pertahun = DetailEkstra::where('tahun_ajaran', $request->tahun_ajaran)->first();
-                    if($pertahun){
-                        DetailEkstra::where('id_ekstra', $id)->update($updetail);
+                $pertahun = DetailEkstra::where('id_ekstra', $id)->where('tahun_ajaran', $request->tahun_ajaran)->first();
+                if($pertahun){
+                        DetailEkstra::where('id', $pertahun->id)->update($updetail);
                     } else {
                         DetailEkstra::create($updetail);
                         $thn_ajaran =  str_replace('/', '-', $request->tahun_ajaran);
                         Alert::success('Berhasil Mengubah', 'Berhasil Mengubah Ekstrakurikuler');
                         return redirect('/kesiswaan/ekstra/'.$request->id.'/'.$thn_ajaran);
-                    }
                 }
                 Ekstra::where('id', $id)->update($updata);
                 Alert::success('Berhasil Mengubah', 'Berhasil Mengubah Ekstrakurikuler');
-            }
         }
 
         $thn_ajaran =  str_replace('/', '-', $request->tahun_ajaran);
         return redirect('/kesiswaan/ekstra/'.$request->id.'/'.$thn_ajaran);
-        // Jika gagal mengubah
     }
+}
 
     public function assign(Request $request, string $id){
         $user_id = User::where('username', $request->id)->first()->id;

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Kesiswaan\AbsensiController;
 use App\Http\Controllers\Kesiswaan\EkstraController as EkstraController;
+use App\Http\Controllers\Kesiswaan\JadwalController;
 use App\Http\Controllers\Kesiswaan\JurnalController;
 use App\Http\Controllers\Kesiswaan\KesiswaanController as KesiswaanController;
 use App\Http\Controllers\Kesiswaan\PelatihController as PelatihController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Pelatih\AbsensiController as PelatihAbsensiController;
 use App\Http\Controllers\Pelatih\EkstraController as PelatihEkstraController;
 use App\Http\Controllers\Pelatih\JurnalController as PelatihJurnalController;
 use App\Http\Controllers\Pelatih\PelatihController as PelatihPelatihController;
+use App\Http\Controllers\Pelatih\SiswaController as PelatihSiswaController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\Siswa\AbsensiController as SiswaAbsensiController;
 use App\Http\Controllers\Siswa\EkstraController as SiswaEkstraController;
@@ -60,8 +62,13 @@ Route::middleware(['auth'])->group(function(){
 
         });
 
+        Route::prefix('jadwal')->group(function() {
+            Route::get('', [JadwalController::class, 'index']);
+        });
+
         Route::prefix('jurnal')->group(function() {
             Route::get('', [JurnalController::class, 'index']);
+            Route::post('download', [JurnalController::class, 'toPDF']);
         });
 
         Route::prefix('kegiatan')->group(function(){
@@ -102,7 +109,7 @@ Route::middleware(['auth'])->group(function(){
     Route::prefix('pelatih')->middleware('role:Pelatih')->group(function(){
         Route::get('', [PelatihPelatihController::class, 'login']);
         Route::get('/profil', [PelatihPelatihController::class, 'profil']);
-
+        Route::post('/edit/{id}', [PelatihPelatihController::class, 'update']);
 
         Route::prefix('absen')->group(function(){
             Route::get('', [PelatihAbsensiController::class, 'index']);
@@ -118,11 +125,18 @@ Route::middleware(['auth'])->group(function(){
             Route::get('{id}/{thn}', [PelatihEkstraController::class, 'show']);
         });
 
+        Route::prefix('siswa')->group(function(){
+            Route::get('/{id}', [PelatihSiswaController::class, 'show']);
+            Route::get('{id}/{thn}', [PelatihEkstraController::class, 'show']);
+            Route::post('edit/{id}', [PelatihSiswaController::class, 'update']);
+        });
+
         Route::prefix('jurnal')->group(function(){
             Route::get('', [PelatihJurnalController::class, 'index']);
             Route::get('{id}', [PelatihJurnalController::class, 'show']);
             Route::get('delete/{id}', [PelatihJurnalController::class, 'destroy']);
             Route::post('add', [PelatihJurnalController::class, 'store']);
+            Route::post('download', [PelatihJurnalController::class, 'toPDF']);
             Route::post('{id}', [PelatihJurnalController::class, 'update']);
         });
 
@@ -133,6 +147,7 @@ Route::middleware(['auth'])->group(function(){
         
         Route::prefix('absen')->group(function(){
             Route::get('', [SiswaAbsensiController::class, 'show']);
+            Route::get('/riwayat', [SiswaAbsensiController::class, 'index']);
             Route::post('', [SiswaAbsensiController::class, 'absen']);
          });
 

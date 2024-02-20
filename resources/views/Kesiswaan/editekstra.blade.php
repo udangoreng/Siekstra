@@ -2,11 +2,20 @@
 @section('title', 'Ekstrakurikuler')
 @section('main')
     <div class="kesiswaan-section p-3 me-2" style="width: 100%">
-        <div>
+        <div class="d-flex">
+            <div class="me-2">
+                <a href="/kesiswaan/ekstra">
+                    <svg width="15" height="27" viewBox="0 0 225 385" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.375 169.475C-3.125 181.975 -3.125 202.275 9.375 214.775L169.375 374.775C181.875 387.275 202.175 387.275 214.675 374.775C227.175 362.275 227.175 341.975 214.675 329.475L77.275 192.075L214.575 54.675C227.075 42.175 227.075 21.875 214.575 9.375C202.075 -3.125 181.775 -3.125 169.275 9.375L9.275 169.375L9.375 169.475Z"
+                            fill="#828282" />
+                    </svg>
+                </a>
+            </div>
             <h2 class="fw-bolder">Detail Ekstrakurikuler</h2>
         </div>
         <div>
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-end mb-1">
                 <form method="POST" action="/kesiswaan/ekstra/{{ $id }}">
                     @csrf
                     <div class="d-flex justify-content-between align-items-end">
@@ -15,7 +24,7 @@
                             <select name="tahun_ajaran" class="form-select" aria-label="Default select example">
                                 <option value="{{ $thn }}" selected>{{ $thn }}
                                 </option>
-                                @foreach (range(2022, 2050) as $item)
+                                @foreach (range(2020, 2024) as $item)
                                     <option value="{{ $item }}/{{ $item + 1 }}">
                                         {{ $item }} / {{ $item + 1 }}
                                     </option>

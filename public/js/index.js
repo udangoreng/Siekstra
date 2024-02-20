@@ -18,3 +18,15 @@ function changeReadonly() {
         btn.style.display = "none";
     }
 }
+
+function pelatihChangeReadOnly() {
+    var x = document.getElementById("exampleFormControlInput1");
+    var btn = document.getElementById("sv-btn");
+    if (x.readOnly === true) {
+        x.readOnly = false;
+        btn.style.display = "block";
+    } else {
+        x.readOnly = true;
+        btn.style.display = "none";
+    }
+}

@@ -12,9 +12,16 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class SiswaController extends Controller
 {
-    function index(){
-        $siswa = Siswa::with('ekstra')->paginate(40);
-        return view('kesiswaan.siswa', ['siswa'=>$siswa]);
+    function index(request $request){
+        $siswa = Siswa::with('ekstra')->paginate(25);
+        if($request->cari){
+            $siswa = Siswa::with('ekstra')
+            ->where('nama_siswa', 'LIKE', '%'.$request->cari.'%')
+            ->orWhere('nis', $request->cari)
+            ->orWhere('kelas', $request->cari)
+            ->paginate(25);
+        }
+        return view('kesiswaan.siswa', compact('siswa'));
     }
 
     public function store(Request $request)

@@ -128,9 +128,9 @@
                 <p class="fw-bold">Anggota</p>
                 @foreach ($siswa as $item)
                     @if ($item->nama_siswa == $user)
-                        - {{ $item->nama_siswa }} (Saya)
+                        - {{ $item->nama_siswa }} (Saya) <br />
                     @else
-                        - {{ $item->nama_siswa }}
+                        - {{ $item->nama_siswa }} <br />
                     @endif
                 @endforeach
             </div>

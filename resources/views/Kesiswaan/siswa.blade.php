@@ -6,6 +6,12 @@
             <h2 class="fw-bolder">Akun Siswa</h2>
             @include('kesiswaan.addsiswa')
         </div>
+        <div class="d-flex justify-content-end mt-3">
+            <form class="d-flex w-25 me-5" role="search" action="/kesiswaan/siswa">
+                <input class="form-control me-2" type="search" placeholder="Cari" name="cari" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Cari</button>
+            </form>
+        </div>
         <div class="card p-3 mt-5 me-5 shadow-sm">
             <table class="table table-striped">
                 <thead>

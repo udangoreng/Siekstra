@@ -2,16 +2,18 @@
 @section('title', 'Absensi')
 @section('main')
     <div class="section">
-        <div class="card" style="width: 90%;">
+        <div class="card mb-3" style="width: 90%;">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h2>Absensi</h2>
-                    <div>
-                        <button type="button" class="btn btn-green" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            {{ $detail->kategori == 'Pendaftaran' ? 'disabled' : '' }}>
+                    <div class="d-flex justify-content-end flex-column flex-md-row">
+                        <button type="button" class="btn btn-green mb-3 me-2" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal" {{ $detail->kategori == 'Pendaftaran' ? 'disabled' : '' }}>
                             Absen Sekarang
                         </button>
-                        @include('pelatih.addjurnal')
+                        @if ($jurnal == '[]')
+                            @include('pelatih.addjurnal')
+                        @endif
                     </div>
                 </div>
                 <p class="mb-3">{{ $detail->absensi_id . ' | ' . $detail->kategori }}</p>
@@ -298,4 +300,30 @@
             </div>
 
         </div>
+
+        @if ($jurnal != '[]')
+            <div class="card" style="width: 90%;">
+                <div class="card-body">
+                    <h2>Jurnal Kegiatan</h2>
+                    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                        @foreach ($jurnal as $item)
+                            <a href="/pelatih/jurnal/{{ $item->id }}">
+                                <div class="card me-3 mt-3">
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="d-flex justify-content-end">
+                                                <p>{{ $item->tanggal }}</p>
+                                            </div>
+                                            <h5 class="fw-bold mb-1">{{ $item->judul }}</h5>
+                                            <p>Penulis : <b>{{ $item['pelatih']->nama_pelatih }}</b>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        @endif
     @endsection

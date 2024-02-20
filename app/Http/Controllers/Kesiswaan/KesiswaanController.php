@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Kesiswaan;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailAbsen;
+use App\Models\Ekstra;
+use App\Models\Jurnal;
+use App\Models\Pelatih;
+use App\Models\Siswa;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -12,14 +17,25 @@ use RealRashid\SweetAlert\Facades\Alert;
 class KesiswaanController extends Controller
 {
     function login(){
-        $data = Auth::user()->name;
-        return view('kesiswaan.index', ['username' => $data]);
+        $username = Auth::user()->name;
+        $ekstra = Ekstra::get();
+        $siswa = Siswa::get();
+        $pelatih = Pelatih::get();
+        $jurnal = Jurnal::get();
+        $absen = DetailAbsen::get();
+        return view('kesiswaan.index', compact('username', 'ekstra', 'siswa', 'pelatih', 'jurnal', 'absen'));
     }
 
-    public function index()
+    public function index(request $request)
     {
-        $data = User::where('role', 'Kesiswaan')->paginate(25);
-        return view('Kesiswaan.kesiswaan', ['kesiswaan' => $data]);
+        $kesiswaan = User::where('role', 'Kesiswaan')->paginate(25);
+        if($request->cari){
+            $kesiswaan = User::where('role', 'Kesiswaan')
+            ->where('name', $request->cari)
+            ->orWhere('username', $request->cari)
+            ->paginate(25);
+        }
+        return view('Kesiswaan.kesiswaan', compact('kesiswaan'));
     }
 
     public function store(Request $request)

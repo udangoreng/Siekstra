@@ -5,6 +5,29 @@
         <div class="d-flex justify-content-between mt-2 me-5 align-items-center">
             <h2 class="fw-bolder">Absensi Siswa</h2>
         </div>
+        <form class="d-flex justify-content-between me-5 align-items-center" role="search" action="/kesiswaan/absen">
+            <div class="me-2">
+                <label for="exampleFormControlInput1" class="form-label">Tanggal Mulai</label>
+                <input class="form-control" type="date" name="tanggal_mulai" aria-label="Search">
+            </div>
+            <div class="me-2">
+                <label for="exampleFormControlInput1" class="form-label">Tanggal Selesai</label>
+                <input class="form-control" type="date" name="tanggal_selesai" aria-label="Search">
+            </div>
+            <div class="me-2">
+                <label for="exampleFormControlInput1" class="form-label">Ekstrakurikuler</label>
+                <select class="form-select" name="ekstra" aria-label="Default select example">
+                    <option selected>Ekstrakurikuler</option>
+                    @foreach ($ekstra as $item)
+                        <option value="{{ $item->id }}">{{ $item->nama_ekstra }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="d-flex h-50 align-items-center">
+                <input class="form-control me-2" type="search" placeholder="Cari" name="cari" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Cari</button>
+            </div>
+        </form>
         <div class="card p-3 mt-5 me-5 shadow-sm">
             <table class="table table-striped">
                 <thead>

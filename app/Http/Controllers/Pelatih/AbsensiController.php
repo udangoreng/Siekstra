@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Absensi;
 use App\Models\DetailAbsen;
 use App\Models\DetailEkstra;
+use App\Models\Jurnal;
+use App\Models\Pelatih;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,18 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class AbsensiController extends Controller
 {
+
+    public function index()
+    {
+        $ekstra = [];
+        $ekstra_id = Pelatih::with('ekstra')->where('user_id', Auth::user()->id)->first();
+        foreach ($ekstra_id['ekstra'] as $id){
+            array_push($ekstra, $id->id);
+        }
+        $absen = DetailAbsen::with('absensi', 'ekstra')->whereIn('ekstra_id', $ekstra)->get();
+        return view('pelatih.riwayatabsensi', ['absen' => $absen]);
+    }
+
     public function show(string $id)
     {
         $siswa_id =[];
@@ -27,20 +41,16 @@ class AbsensiController extends Controller
         $data = Absensi::with('user', 'siswa')->where('absensi_id', $detail->absensi_id)->get();
 
         if ($data == '[]'){
-
             $siswa = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
             ->select('siswa.*')
             ->where('ekstra_id', '=', $detail->ekstra_id)
             ->where('tahun_ajaran', '=', $thn_ajaran)
             ->get();
-
         } else{
-            
             foreach ($data->toArray() as $siswa) {
                 array_push($siswa_id, $siswa['user_id']);
             }
-
             $siswa = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
             ->select('siswa.*')
@@ -49,7 +59,9 @@ class AbsensiController extends Controller
             ->whereNotIn('siswa.user_id', $siswa_id)
             ->get();
         }
-        return view('Pelatih.absensi', ['absen'=>$data, 'detail'=>$detail, 'siswa'=>$siswa]);
+
+        $jurnal = Jurnal::where('absensi_id', $id)->get();
+        return view('Pelatih.absensi', ['absen'=>$data, 'detail'=>$detail, 'siswa'=>$siswa, 'jurnal'=>$jurnal]);
     }
 
     public function absen(request $request)

@@ -6,6 +6,12 @@
             <h2 class="fw-bolder">Ekstrakurikuler</h2>
             @include('kesiswaan.addekstra')
         </div>
+        <div class="d-flex justify-content-end mt-3">
+            <form class="d-flex w-25 me-5" role="search" action="/kesiswaan/ekstra">
+                <input class="form-control me-2" type="search" placeholder="Cari" name="cari" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Cari</button>
+            </form>
+        </div>
         <div class="card p-3 mt-5 me-5 shadow-sm">
             <table class="table table-striped">
                 <thead>
@@ -22,9 +28,7 @@
                     @foreach ($data as $item)
                         <tr>
                             <th class="d-flex align-items-center">
-                                <div
-                                    style="{{ $loop->iteration == 1 ? 'background-color: #28a745; height: 22.5px; width: 5px; margin-right: 5px; border-radius: 25%;' : '' }}">
-                                </div>{{ $loop->iteration }}
+                                {{ $loop->iteration }}
                             </th>
                             <td>
                                 {{ $item->kode_ekstra }}
@@ -99,5 +103,6 @@
                 </tbody>
             </table>
         </div>
+        {{ $data->links() }}
     </div>
 @endsection
