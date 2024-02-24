@@ -41,13 +41,13 @@
                                     {{ '-' }}
                                 @endif
                                 @foreach ($item['pelatih'] as $pelatih)
-                                    {{ $pelatih->nama_pelatih }}.
+                                    {{ $pelatih->pivot->tahun_ajaran == $thn ? $pelatih->nama_pelatih : '-' }}.
                                 @endforeach
                             </td>
                             <td>{{ count($item['siswa']) }} Anggota</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <a href="/kesiswaan/ekstra/{{ $item->id }}/{{ $thn }}">
+                                    <a href="/kesiswaan/ekstra/{{ $item->id }}/{{ str_replace('/', '-', $thn) }}">
                                         <div class="mx-3">
                                             <svg width="20" height="20" viewBox="0 0 506 506" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">

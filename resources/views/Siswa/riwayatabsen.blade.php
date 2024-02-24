@@ -5,14 +5,32 @@
         <h2>Riwayat Absensi</h2>
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
             @foreach ($absen as $item)
-                <div class="card">
+                <div class="card me-3 mb-3">
                     <div class="card-body">
-                        <p>{{ $item['detail']->absensi_id }}</p>
+                        <p class="fw-bold">{{ $item->absensi_id }}</p>
                         <p>{{ $item['ekstra']->nama_ekstra }}</p>
-                        <p>{{ $item['detail']->deskripsi }}</p>
-                        <p>{{ substr($item->created_at, 0, 10) }} | {{ substr($item->created_at, 11, 14) }}</p>
-                        <p>{{ $item->status }}</p>
-                        <p>{{ $item->keterangan }}</p>
+                        <p>{{ $item['detail'] ? $item['detail']->deskripsi : '-' }}</p>
+                        <div class="my-3">
+                            <p>Waktu Absensi:</p>
+                            <p> {{ substr($item->created_at, 0, 10) }} | {{ substr($item->created_at, 11, 14) }}
+                            </p>
+                        </div>
+                        <p>Keterangan : {{ $item->keterangan }}</p>
+                        <div class="d-flex">
+                            @if ($item->status == 'Dikonfirmasi')
+                                <div class="p-1 bg-success text-white text-center rounded-3">
+                                    {{ $item->status }}
+                                </div>
+                            @elseif ($item->status == 'Pending')
+                                <div class="p-1 bg-warning text-center rounded-3">
+                                    {{ $item->status }}
+                                </div>
+                            @else
+                                <div class="p-1 bg-danger text-white text-center rounded-3">
+                                    {{ $item->status }}
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             @endforeach

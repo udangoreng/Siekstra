@@ -47,7 +47,7 @@ class JurnalController extends Controller
     {
         $jurnal = Jurnal::with('detail', 'ekstra', 'pelatih')->where('id', $request->id)->get();
         $hadir = Absensi::with('siswa')->where('absensi_id', $jurnal[0]['detail']->absensi_id)->get();
-        $pdf = PDF::loadView('pelatih.jurnalpdf', compact('jurnal', 'hadir'));
+        $pdf = PDF::loadView('kesiswaan.jurnalpdf', compact('jurnal', 'hadir'));
         return $pdf->stream();
     }
 }

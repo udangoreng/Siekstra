@@ -7,6 +7,11 @@
     <title>Jurnal Kegiatan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        .page-break {
+            page-break-after: always;
+        }
+    </style>
 </head>
 
 <body>
@@ -59,37 +64,37 @@
                     <p style="white-space: pre-line; text-align: justify; margin-right: 2.5rem;">
                         {{ $item->deskripsi }}</p>
                 </div>
+
                 <div
                     style="border-bottom: 3px solid #d8d6d6; margin-right: 2.5rem; margin-bottom: 1.5rem; margin-top: 0.5rem;">
                 </div>
+                <div class="page-break"></div>
+
                 <div>
                     <h5 class="fw-semibold">Daftar Absensi Siswa</h5>
-                    <div class="table-responsive">
-                        <table class="table" style="width: 60%">
-                            <thead>
+                    <table style="width: 100;">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nama Siswa</th>
+                                <th scope="col">Kelas</th>
+                                <th scope="col">Keterangan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($hadir as $item)
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Nama Siswa</th>
-                                    <th scope="col">Kelas</th>
-                                    <th scope="col">Keterangan</th>
+                                    <td scope="row">{{ $loop->iteration }}</td>
+                                    <td>{{ $item['siswa']->nama_siswa }}</td>
+                                    <td>{{ $item['siswa']->kelas }}</td>
+                                    <td>{{ $item->keterangan }}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {{-- @foreach ($hadir as $item)
-                                        {{ $item }}
-                                        <tr>
-                                            <th scope="row">{{ $loop->iteration }}</th>
-                                            {{-- <td>{{ $item['siswa']->nama_siswa }}</td>
-                                            <td>{{ $item['siswa']->kelas }}</td>
-                                            <td>{{ $item->keterangan }}</td> --}}
-                                {{-- </tr> --}}
-                                {{-- @endforeach --}}
-                            </tbody>
-                        </table>
-                    </div>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
+            @endforeach
         </div>
-        @endforeach
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
         </script>

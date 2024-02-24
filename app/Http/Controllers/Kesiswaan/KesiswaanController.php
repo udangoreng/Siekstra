@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Kesiswaan;
 
 use App\Http\Controllers\Controller;
 use App\Models\DetailAbsen;
+use App\Models\DetailEkstra;
 use App\Models\Ekstra;
 use App\Models\Jurnal;
 use App\Models\Pelatih;
@@ -23,7 +24,9 @@ class KesiswaanController extends Controller
         $pelatih = Pelatih::get();
         $jurnal = Jurnal::get();
         $absen = DetailAbsen::get();
-        return view('kesiswaan.index', compact('username', 'ekstra', 'siswa', 'pelatih', 'jurnal', 'absen'));
+
+        $eks_today = DetailEkstra::with('ekstra')->where('hari', now()->locale('id')->dayName)->get();
+        return view('kesiswaan.index', compact('username', 'ekstra', 'siswa', 'pelatih', 'jurnal', 'absen', 'eks_today'));
     }
 
     public function index(request $request)

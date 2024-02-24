@@ -41,7 +41,7 @@
                                 @if ($item['ekstra'] == '[]')
                                     {{ '-' }}
                                 @endif
-                                @foreach ($item['ekstra'] as $ekstra)
+                                @foreach ($item['ekstra']->unique('nama_ekstra') as $ekstra)
                                     {{ $ekstra->nama_ekstra }}.
                                 @endforeach
                             </td>

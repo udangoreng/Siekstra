@@ -11,8 +11,17 @@
                             data-bs-target="#exampleModal" {{ $detail->kategori == 'Pendaftaran' ? 'disabled' : '' }}>
                             Absen Sekarang
                         </button>
-                        @if ($jurnal == '[]')
-                            @include('pelatih.addjurnal')
+                        <div>
+                            @if ($jurnal == '[]')
+                                @include('Pelatih.addjurnal')
+                            @endif
+                        </div>
+                        @if ($detail->tanggal_selesai < date('Y-m-d'))
+                            <form action="/pelatih/absen/download" method="POST">
+                                @csrf
+                                <input type="text" name="id" value="{{ $detail->id }}" readonly hidden>
+                                <button type="submit" class="btn btn-green mx-2">Cetak Laporan</button>
+                            </form>
                         @endif
                     </div>
                 </div>
@@ -137,7 +146,8 @@
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary"
                                                                     data-bs-dismiss="modal">Kembali</button>
-                                                                <button type="submit" class="btn btn-green">Simpan</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-green">Simpan</button>
                                                             </div>
                                                         </form>
                                                     </div>

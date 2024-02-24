@@ -15,8 +15,9 @@ class AbsensiController extends Controller
 {
     public function index()
     {
-        $absen = Absensi::with('detail')->where('user_id', Auth::user()->id)->get();
-        return view('siswa.riwayatabsen', ['absen'=>$absen]);
+        $absen = Absensi::with('detail', 'ekstra')->where('user_id', Auth::user()->id)->get();
+        // dd($absen);  
+        return view('siswa.riwayatabsen', compact('absen'));
     }
     public function absen(request $request)
     {

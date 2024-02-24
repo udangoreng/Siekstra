@@ -54,4 +54,19 @@ class SessionController extends Controller
         return 'username';
     }
 
+    public function roleRedir()
+    {
+        if(Auth::user()->role == 'Siswa'){
+            return redirect('/siswa');
+        }
+        else if(Auth::user()->role == 'Pelatih'){
+            return redirect('/pelatih');
+        }
+        else if(Auth::user()->role == 'Kesiswaan'){
+            return redirect('/kesiswaan');
+        } else{
+            return redirect('/login')->withErrors('Kesalahan!');
+        }
+    }
+
 }

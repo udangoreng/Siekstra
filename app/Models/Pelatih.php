@@ -14,6 +14,11 @@ class Pelatih extends Model
 
     public function ekstra()
     {
-        return $this->belongsToMany(Ekstra::class, 'ekstra_diikuti', 'user_id', 'ekstra_id', 'user_id');
+        return $this->belongsToMany(Ekstra::class, 'ekstra_diikuti', 'user_id', 'ekstra_id', 'user_id')->withPivot('tahun_ajaran');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }

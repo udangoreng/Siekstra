@@ -26,7 +26,7 @@
                     </div>
                     <div style="width: 50%" class="mb-3 ms-3 ">
                         <label for="exampleFormControlInput1" class="form-label fw-semibold">Email</label>
-                        <input name="email" type="email" class="form-control" value="{{ $email }}">
+                        <input name="email" type="email" class="form-control" value="{{ $pelatih->user->email }}">
                     </div>
                 </div>
                 <div class="mb-3">

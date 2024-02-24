@@ -54,8 +54,8 @@
                     </div>
                     <div class="mb-3" style="width: 50%">
                         <label for="exampleFormControlInput1" class="form-label fw-semibold">Email</label>
-                        <input type="email" value="{{ $user->email }}" id="email" name="email" class="form-control"
-                            readonly>
+                        <input type="email" value="{{ $data['user']->email }}" id="email" name="email"
+                            class="form-control" readonly>
                     </div>
                 </div>
                 <input hidden readonly name="id" value="{{ $data->id }}">
@@ -67,6 +67,9 @@
             <div class="card mt-4">
                 <div class="card-body">
                     <label for="exampleFormControlInput1" class="form-label fw-semibold">Ekstrakurikuler Diikuti</label>
+                    @foreach ($data['ekstra'] as $item)
+                        <p>{{ $item->nama_ekstra }} ({{ $item->pivot->tahun_ajaran }})</p>
+                    @endforeach
                 </div>
             </div>
         </div>

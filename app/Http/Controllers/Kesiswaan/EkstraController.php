@@ -21,15 +21,15 @@ class EkstraController extends Controller
         $data = Ekstra::with('pelatih', 'siswa')->paginate(25);
         $month = Carbon::now()->month;
         if ($month >= 7){
-            $thn = Carbon::now()->year."-".(Carbon::now()->year)+1;
+            $thn = Carbon::now()->year."/".(Carbon::now()->year)+1;
         } else {
-            $thn = ((Carbon::now()->year)-1)."-".(Carbon::now()->year);
+            $thn = ((Carbon::now()->year)-1)."/".(Carbon::now()->year);
         }
 
         if($request->cari){
             $data = Ekstra::with('pelatih', 'siswa')
             ->where('nama_ekstra', $request->cari)
-            ->orWhere('kode', $request->cari)
+            ->orWhere('kode_ekstra', $request->cari)
             ->paginate(25);
         }
         return view('Kesiswaan.ekstra', compact('data', 'thn'));

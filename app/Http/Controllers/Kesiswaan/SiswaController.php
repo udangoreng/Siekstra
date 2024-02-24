@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Kesiswaan;
 use App\Http\Controllers\Controller;
 use App\Models\Siswa;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -88,11 +90,38 @@ class SiswaController extends Controller
         }
     }
 
-    public function show(string $id)
+    public function show(request $request, string $id)
     {
-        $siswa = Siswa::with('ekstra')->where('id', $id)->first();
-        $email = User::where('id', $siswa->user_id)->first()->email;
-        return view('Kesiswaan.editsiswa', ['siswa'=>$siswa, 'email'=>$email]);
+        $month = Carbon::now()->month;
+        if ($month >= 7){
+            $thn = Carbon::now()->year."/".(Carbon::now()->year)+1;
+        } else {
+            $thn = ((Carbon::now()->year)-1)."/".(Carbon::now()->year);
+        }
+        $siswa = Siswa::with('ekstra', 'user')->where('id', $id)->first();
+        $ekstra = [];
+        $ekstra = DB::table('ekstra_diikuti')
+                ->join('ekstra', 'ekstra_diikuti.ekstra_id', '=', 'ekstra.id')
+                ->select('ekstra_diikuti.id as diikuti_id', 'ekstra_diikuti.*', 'ekstra.*')
+                ->where('user_id', $siswa['user_id'])
+                ->where('tahun_ajaran', $thn)
+                ->get();
+
+        if($request->tahun){
+                $ekstra = DB::table('ekstra_diikuti')
+                ->join('ekstra', 'ekstra_diikuti.ekstra_id', '=', 'ekstra.id')
+                ->select('ekstra_diikuti.id as diikuti_id', 'ekstra_diikuti.*', 'ekstra.*')
+                ->where('user_id', $siswa['user_id'])
+                ->where('tahun_ajaran', $request->tahun)
+                ->get();
+        }
+        return view('Kesiswaan.editsiswa', compact('siswa', 'ekstra'));
+    }
+
+    public function cancel(request $request, string $id)
+    {
+        $data = DB::table('ekstra_diikuti')->where('id', $request->id)->delete();
+        return redirect('/kesiswaan/siswa/'.$id);
     }
 
     public function update(Request $request, string $id)

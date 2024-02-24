@@ -85,15 +85,14 @@ class PelatihController extends Controller
     public function show(string $id)
     {
         // One to One relationship
-        $pelatih = Pelatih::with('ekstra')->where('id', $id)->first();
-        $email = User::where('id', $pelatih->user_id)->first()->email;
+        $pelatih = Pelatih::with('ekstra', 'user')->where('id', $id)->first();
         $ekstra = Ekstra::all();
-        return view('Kesiswaan.editpelatih', ['pelatih'=>$pelatih, 'ekstra'=>$ekstra, 'email'=>$email]);
+        return view('Kesiswaan.editpelatih', compact('pelatih', 'ekstra'));
     }
 
     public function update(Request $request, string $id)
     {
-        $ekstra = Pelatih::find($id);
+        $pelatih = Pelatih::find($id);
         $updetail = [
             'NIP'=>$request->NIP,
             'nama_pelatih'=>$request->nama_pelatih,
@@ -107,7 +106,7 @@ class PelatihController extends Controller
             'username'=>$request->NIP,
         ];
 
-        $ekstra->update($updetail);
+        $pelatih->update($updetail);
         User::where('id', $request->user_id)->update($userdata);
         return redirect('kesiswaan/pelatih/'.$id);
        

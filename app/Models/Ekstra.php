@@ -14,16 +14,21 @@ class Ekstra extends Model
 
     public function siswa()
     {
-        return $this->belongsToMany(Siswa::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id');
+        return $this->belongsToMany(Siswa::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id')->withPivot('tahun_ajaran');
     }
 
     public function pelatih()
     {
-        return $this->belongsToMany(Pelatih::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id');
+        return $this->belongsToMany(Pelatih::class, 'ekstra_diikuti', 'ekstra_id', 'user_id', 'id', 'user_id')->withPivot('tahun_ajaran');
     }
 
     public function absensi()
     {
         return $this->hasMany(DetailAbsen::class, 'ekstra_id', 'id');
+    }
+
+    public function detail()
+    {
+        return $this->hasMany(DetailEkstra::class, 'ekstra_id', 'id');
     }
 }

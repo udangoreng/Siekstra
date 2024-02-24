@@ -5,17 +5,18 @@
         <div class="container mt-3">
             <div class="card p-3 my-3">
                 <div class="d-flex justify-content-between">
-                    <h2>Ekstrakurikuler Saya</h2>
+                    <h2>Ekstrakurikuler Diikuti</h2>
                     <div class="d-flex justify-content-end mb-3">
-                        <form method="POST" action="/">
+                        <form method="get" action="/siswa/ekstra">
                             @csrf
                             <div class="d-flex justify-content-between align-items-end">
                                 <div class="me-2">
                                     <label class="form-label fw-semibold">Tahun Ajaran</label>
-                                    <select name="tahun_ajaran" class="form-select" aria-label="Default select example">
-                                        <option value="{{ $siswa->tahun_pelajaran }}" selected>{{ $siswa->tahun_pelajaran }}
+                                    <select name="cari" class="form-select" aria-label="Default select example">
+                                        <option value="{{ $siswa[0]->tahun_pelajaran }}" selected>
+                                            {{ $siswa[0]->tahun_pelajaran }}
                                         </option>
-                                        @foreach (range(substr($siswa->tahun_pelajaran, 0, 4), substr($siswa->tahun_pelajaran, 0, 4) + 2) as $item)
+                                        @foreach (range(substr($siswa[0]->tahun_pelajaran, 0, 4), substr($siswa[0]->tahun_pelajaran, 0, 4) + 2) as $item)
                                             <option value="{{ $item }}/{{ $item + 1 }}">
                                                 {{ $item }} / {{ $item + 1 }}
                                             </option>
@@ -23,7 +24,7 @@
                                     </select>
                                 </div>
                                 <div>
-                                    <button class="btn btn-green">Cari</button>
+                                    <button type="submit" class="btn btn-green">Cari</button>
                                 </div>
                             </div>
                         </form>
@@ -48,16 +49,19 @@
                                             </div>
                                             <button type="button" class="btn btn-green position-relative">
                                                 Lihat Detail
-                                                <span
-                                                    class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                    {{ count($item['absensi']) }}
-                                                </span>
+                                                @if (count($item['absensi']) >= 1)
+                                                    <span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        {{ count($item['absensi']) }}
+                                                    </span>
+                                                @endif
                                             </button>
                                         </div>
                                     </div>
                                 </a>
                             @else
-                                <a href="/siswa/ekstra/{{ $item['id'] }}/{{ str_replace('/', '-', $thn) }}">
+                                <a
+                                    href="/siswa/ekstra/{{ $item['id'] }}/{{ str_replace('/', '-', $siswa[0]->tahun_ajaran) }}">
                                     <div class="card mx-1 my-3">
                                         <div class="card-body">
                                             <h4 class="fw-semibold mb-2">{{ $item['nama_ekstra'] }}</h4>
@@ -85,7 +89,7 @@
                 </div>
             </div>
             <div class="card p-3 my-3">
-                <h2>Kegiatan / Khusus</h2>
+                <h2>Pendaftaran Dibuka</h2>
                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
                     @foreach ($khusus as $item)
                         <div class="card mx-1 my-3">
@@ -118,8 +122,8 @@
                                                             value="{{ $item['ekstra']['id'] }}" readonly hidden>
                                                         <input type="text" name="absensi_id"
                                                             value="{{ $item['absensi_id'] }}" readonly hidden>
-                                                        <input type="text" name="user_id" value="{{ $siswa->user_id }}"
-                                                            readonly hidden>
+                                                        <input type="text" name="user_id"
+                                                            value="{{ $siswa[0]->user_id }}" readonly hidden>
                                                         <div class="mb-3">
                                                             <label class="form-label">Ekstrakurikuler</label>
                                                             <input type="text" name="" class="form-control"
@@ -129,7 +133,7 @@
                                                         <div class="mb-3">
                                                             <label class="form-label">Nama Siswa</label>
                                                             <input type="text" name="" class="form-control"
-                                                                value="{{ $siswa->nama_siswa }}" readonly>
+                                                                value="{{ $siswa[0]->nama_siswa }}" readonly>
                                                         </div>
 
                                                         <div class="mb-3">

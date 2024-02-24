@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AbsensiController extends Controller
 {
@@ -25,7 +26,7 @@ class AbsensiController extends Controller
             array_push($ekstra, $id->id);
         }
         $absen = DetailAbsen::with('absensi', 'ekstra')->whereIn('ekstra_id', $ekstra)->get();
-        return view('pelatih.riwayatabsensi', ['absen' => $absen]);
+        return view('pelatih.riwayatabsensi', compact('absen'));
     }
 
     public function show(string $id)
@@ -38,9 +39,9 @@ class AbsensiController extends Controller
         } else {
             $thn_ajaran = ((substr($detail->tanggal_mulai, 0, 4))-1)."/".(substr($detail->tanggal_mulai, 0, 4));
         }
-        $data = Absensi::with('user', 'siswa')->where('absensi_id', $detail->absensi_id)->get();
+        $absen = Absensi::with('user', 'siswa')->where('absensi_id', $detail->absensi_id)->get();
 
-        if ($data == '[]'){
+        if ($absen == '[]'){
             $siswa = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
             ->select('siswa.*')
@@ -48,7 +49,7 @@ class AbsensiController extends Controller
             ->where('tahun_ajaran', '=', $thn_ajaran)
             ->get();
         } else{
-            foreach ($data->toArray() as $siswa) {
+            foreach ($absen->toArray() as $siswa) {
                 array_push($siswa_id, $siswa['user_id']);
             }
             $siswa = DB::table('ekstra_diikuti')
@@ -61,7 +62,7 @@ class AbsensiController extends Controller
         }
 
         $jurnal = Jurnal::where('absensi_id', $id)->get();
-        return view('Pelatih.absensi', ['absen'=>$data, 'detail'=>$detail, 'siswa'=>$siswa, 'jurnal'=>$jurnal]);
+        return view('Pelatih.absensi', compact('absen', 'detail', 'siswa', 'jurnal'));
     }
 
     public function absen(request $request)
@@ -200,5 +201,40 @@ class AbsensiController extends Controller
                 return redirect()->back();
             }
         }
+    }
+
+    public function toPDF(request $request)
+    {
+        $siswa_id =[];
+        $detail = DetailAbsen::where('id', $request->id)->first();
+        $month = date_parse_from_format("Y-m-d", $detail->tanggal_mulai);
+        if ($month['month'] >= 7){
+            $thn_ajaran = substr($detail->tanggal_mulai, 0, 4)."/".(substr($detail->tanggal_mulai, 0, 4))+1;
+        } else {
+            $thn_ajaran = ((substr($detail->tanggal_mulai, 0, 4))-1)."/".(substr($detail->tanggal_mulai, 0, 4));
+        }
+        $absen = Absensi::with('user', 'siswa')->where('absensi_id', $detail->absensi_id)->get();
+
+        if ($absen == '[]'){
+            $siswa = DB::table('ekstra_diikuti')
+            ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
+            ->select('siswa.*')
+            ->where('ekstra_id', '=', $detail->ekstra_id)
+            ->where('tahun_ajaran', '=', $thn_ajaran)
+            ->get();
+        } else{
+            foreach ($absen->toArray() as $siswa) {
+                array_push($siswa_id, $siswa['user_id']);
+            }
+            $siswa = DB::table('ekstra_diikuti')
+            ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
+            ->select('siswa.*')
+            ->where('ekstra_id', '=', $detail->ekstra_id)
+            ->where('tahun_ajaran', '=', $thn_ajaran)
+            ->whereNotIn('siswa.user_id', $siswa_id)
+            ->get();
+        }
+        $pdf = PDF::loadView('Pelatih.absensipdf', compact('absen', 'detail', 'siswa'));
+        return $pdf->stream();
     }
 }

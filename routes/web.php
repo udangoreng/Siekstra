@@ -40,9 +40,7 @@ Route::middleware(['guest'])->group(function(){
 });
 
 Route::middleware(['auth'])->group(function(){
-    Route::get('/home', function () {
-        return redirect('logout');
-    });
+    Route::get('/home', [SessionController::class, 'roleRedir']);
 
     Route::prefix('kesiswaan')->middleware('role:Kesiswaan')->group(function(){
         Route::get('', [KesiswaanController::class, 'login']);
@@ -102,6 +100,7 @@ Route::middleware(['auth'])->group(function(){
             Route::get('delete/{id}', [SiswaController::class, 'destroy']);
             Route::post('/add', [SiswaController::class, 'store']);
             Route::post('/edit/{id}', [SiswaController::class, 'update']);
+            Route::post('/cancel/{id}', [SiswaController::class, 'cancel']);
         });
 
     });
@@ -117,6 +116,7 @@ Route::middleware(['auth'])->group(function(){
             Route::post('', [PelatihAbsensiController::class, 'absen']);
             Route::post('absen', [PelatihAbsensiController::class, 'absenSiswa']);
             Route::post('/confirm', [PelatihAbsensiController::class, 'confirm']);
+            Route::post('download', [PelatihAbsensiController::class, 'toPDF']);
             Route::post('edit/{id}', [PelatihAbsensiController::class, 'update']);
         });
 
@@ -144,6 +144,8 @@ Route::middleware(['auth'])->group(function(){
 
     Route::prefix('siswa')->middleware('role:Siswa')->group(function(){
         Route::get('', [SiswaSiswaController::class, 'login']);
+        Route::get('/profil', [SiswaSiswaController::class, 'profil']);
+        Route::post('/edit/{id}', [SiswaSiswaController::class, 'update']);
         
         Route::prefix('absen')->group(function(){
             Route::get('', [SiswaAbsensiController::class, 'show']);
@@ -157,8 +159,6 @@ Route::middleware(['auth'])->group(function(){
             Route::post('/daftar', [SiswaEkstraController::class, 'daftar']);
         });
         
-        Route::get('/profil', [SiswaSiswaController::class, 'profil']);
-        Route::post('/edit/{id}', [SiswaSiswaController::class, 'update']);
     });
 
 
