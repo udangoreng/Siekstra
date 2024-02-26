@@ -50,25 +50,27 @@ class SiswaController extends Controller
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
             return redirect()->back();
         } else {
-            $email = $request->NIS.'@contoh.com';
-            $pass = $request->NIS.'@SMKN1jenpo';
+            $usn = explode("/", $request->NIS)[0];
 
-            if(User::where('username', $request->NIS)){
-                User::where('username', $request->NIS)->delete();
+            $email = $usn.'@contoh.com';
+            $pass = $usn.'@SMKN1jenpo';
+
+            if(User::where('username', $usn)){
+                User::where('username', $usn)->delete();
             }
 
             $user = User::create([
                 'name' => $request->nama_siswa,
                 'email' => $email,
-                'username' => $request->NIS,
+                'username' => $usn,
                 'password' => $pass,
                 'role' => "Siswa",
             ]);
 
             if($user){
-                if(User::where('username', $request->NIS)){
+                if(User::where('username', $usn)){
                     // Get Userid by those NIP
-                    $userdata = User::where('username', $request->NIS)->first();
+                    $userdata = User::where('username', $usn)->first();
 
                     // Create a user
                     $data = Siswa::create([
