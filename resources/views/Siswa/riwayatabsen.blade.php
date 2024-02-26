@@ -35,5 +35,16 @@
                 </div>
             @endforeach
         </div>
+        <div class="mt-3">
+            <h4>Jumlah Absensi</h4>
+            @foreach ($banyak as $item)
+                <div class="mb-3">
+                    <p>Ekstra : {{ $item['ekstra'] }}</p>
+                    <p>Total Kehadiran : {{ $item['absen'] }} / {{ $item['semua'] }} |
+                        {{ substr($item['persen'], 0, 3) }}%
+                    </p>
+                </div>
+            @endforeach
+        </div>
     </div>
 @endsection

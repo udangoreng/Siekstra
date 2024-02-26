@@ -2,7 +2,16 @@
 @section('title', 'Pelatih')
 @section('main')
     <div class="kesiswaan-section p-3 me-4">
-        <div>
+        <div class="d-flex">
+            <div class="me-2">
+                <a href="/kesiswaan/pelatih">
+                    <svg width="15" height="27" viewBox="0 0 225 385" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M9.375 169.475C-3.125 181.975 -3.125 202.275 9.375 214.775L169.375 374.775C181.875 387.275 202.175 387.275 214.675 374.775C227.175 362.275 227.175 341.975 214.675 329.475L77.275 192.075L214.575 54.675C227.075 42.175 227.075 21.875 214.575 9.375C202.075 -3.125 181.775 -3.125 169.275 9.375L9.275 169.375L9.375 169.475Z"
+                            fill="#828282" />
+                    </svg>
+                </a>
+            </div>
             <h2 class="fw-bolder">Detail Pelatih</h2>
         </div>
         <div>
@@ -12,6 +21,11 @@
                     <label for="exampleFormControlInput1" class="form-label fw-semibold">NIP</label>
                     <input name="NIP" type="text" class="form-control" value="{{ $pelatih->NIP }}">
                     <input name="user_id" type="text" class="form-control" value="{{ $pelatih->user_id }}" hidden
+                        readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label fw-semibold">Username</label>
+                    <input name="nama_pelatih" type="text" class="form-control" value="{{ $pelatih->user->username }}"
                         readonly>
                 </div>
                 <div class="mb-3">
@@ -46,29 +60,30 @@
                     </button>
                 </div>
 
-                <div class="d-flex justify-content-between">
-                    @foreach ($pelatih->ekstra as $item)
+                @foreach ($pelatih->ekstra as $item)
+                    <div class="d-flex justify-content-between mb-3">
                         <input class="form-control" value={{ $item['id'] }} name="ekstra_id" readonly hidden>
-                        <input name="nama_ekstra" type="text" class="form-control" value="{{ $item['nama_ekstra'] }}"
-                            readonly>
-                        <button formaction="/kesiswaan/pelatih/cancel/{{ $pelatih->id }}" class="btn ms-2">
-                            <svg width="18" height="20" viewBox="0 0 511 582" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_14_4)">
-                                    <path
-                                        d="M154.212 20.1199L146 36.375H36.5C16.3109 36.375 0 52.6301 0 72.75C0 92.8699 16.3109 109.125 36.5 109.125H474.5C494.689 109.125 511 92.8699 511 72.75C511 52.6301 494.689 36.375 474.5 36.375H365L356.787 20.1199C350.628 7.72969 337.967 0 324.166 0H186.834C173.033 0 160.372 7.72969 154.212 20.1199ZM474.5 145.5H36.5L60.6813 530.848C62.5063 559.607 86.4594 582 115.317 582H395.683C424.541 582 448.494 559.607 450.319 530.848L474.5 145.5Z"
-                                        fill="#828282" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_14_4">
-                                        <rect width="511" height="582" fill="white" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-
-                        </button>
-                    @endforeach
-                </div>
+                        <input name="nama_ekstra" type="text" class="form-control"
+                            value="{{ $item['nama_ekstra'] }} ({{ $item->pivot->tahun_ajaran }})" readonly>
+                        @if ($item->pivot->tahun_ajaran == $thn)
+                            <button formaction="/kesiswaan/pelatih/cancel/{{ $pelatih->id }}" class="btn ms-2">
+                                <svg width="18" height="20" viewBox="0 0 511 582" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_14_4)">
+                                        <path
+                                            d="M154.212 20.1199L146 36.375H36.5C16.3109 36.375 0 52.6301 0 72.75C0 92.8699 16.3109 109.125 36.5 109.125H474.5C494.689 109.125 511 92.8699 511 72.75C511 52.6301 494.689 36.375 474.5 36.375H365L356.787 20.1199C350.628 7.72969 337.967 0 324.166 0H186.834C173.033 0 160.372 7.72969 154.212 20.1199ZM474.5 145.5H36.5L60.6813 530.848C62.5063 559.607 86.4594 582 115.317 582H395.683C424.541 582 448.494 559.607 450.319 530.848L474.5 145.5Z"
+                                            fill="#828282" />
+                                    </g>
+                                    <defs>
+                                        <clipPath id="clip0_14_4">
+                                            <rect width="511" height="582" fill="white" />
+                                        </clipPath>
+                                    </defs>
+                                </svg>
+                            </button>
+                        @endif
+                    </div>
+                @endforeach
 
                 <input type="text" name="id" value="{{ $pelatih->id }}" readonly hidden>
                 <div class="d-flex justify-content-between mt-3">
@@ -107,7 +122,7 @@
                         <div class="mb-3 me-4">
                             <label class="form-label fw-semibold">Tahun Ajaran</label>
                             <select name="tahun_ajaran" class="form-select" aria-label="Default select example">
-                                @foreach (range(2022, 2050) as $item)
+                                @foreach (range(2022, 2030) as $item)
                                     <option value="{{ $item }}/{{ $item + 1 }}">
                                         {{ $item }} / {{ $item + 1 }}
                                     </option>

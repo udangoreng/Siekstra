@@ -31,12 +31,12 @@ class KesiswaanController extends Controller
 
     public function index(request $request)
     {
-        $kesiswaan = User::where('role', 'Kesiswaan')->paginate(25);
+        $kesiswaan = User::where('role', 'Kesiswaan')->latest()->paginate(10);
         if($request->cari){
             $kesiswaan = User::where('role', 'Kesiswaan')
             ->where('name', $request->cari)
             ->orWhere('username', $request->cari)
-            ->paginate(25);
+            ->paginate(10);
         }
         return view('Kesiswaan.kesiswaan', compact('kesiswaan'));
     }

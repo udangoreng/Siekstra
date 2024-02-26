@@ -8,6 +8,7 @@ use App\Models\DetailAbsen;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -15,10 +16,43 @@ class AbsensiController extends Controller
 {
     public function index()
     {
-        $absen = Absensi::with('detail', 'ekstra')->where('user_id', Auth::user()->id)->get();
-        // dd($absen);  
-        return view('siswa.riwayatabsen', compact('absen'));
+        $month = Carbon::now()->month;
+        if ($month >= 7){
+            $thn = Carbon::now()->year."/".(Carbon::now()->year)+1;
+            $awal = date('Y-m-d', strtotime(Carbon::now()->year.'-07-01'));
+            $akhir = date('Y-m-d', strtotime(Carbon::now()->year.'-12-31'));
+        } else {
+            $thn = ((Carbon::now()->year)-1)."/".(Carbon::now()->year);
+            $awal = date('Y-m-d', strtotime((Carbon::now()->year).'-01-01'));
+            $akhir = date('Y-m-d', strtotime((Carbon::now()->year).'-06-30'));
+        }
+
+        $banyak = [];
+        $data = DB::table('ekstra_diikuti')
+            ->join('ekstra', 'ekstra_diikuti.ekstra_id', '=', 'ekstra.id')
+            ->select('ekstra.*', 'ekstra_diikuti.*')
+            ->where('user_id', '=', Auth::user()->id)
+            ->where('tahun_ajaran', '=', $thn)
+            ->get();
+
+        foreach ($data as $id) {
+            $count = Absensi::where('user_id', Auth::user()->id)->where('ekstra_id', $id->ekstra_id)->count();
+            $total = DetailAbsen::with('ekstra')->where('ekstra_id', $id->ekstra_id)->whereBetween('tanggal_mulai', [$awal, $akhir])->whereBetween('tanggal_selesai', [$awal, $akhir])->get();
+            if(!count($total) == 0 || !$count == 0){
+                $percentage = ($count / count($total)) * 100;
+            } else {
+                $percentage = 0;
+            }
+            array_push($banyak,[
+                'ekstra'=>$id->nama_ekstra,
+                'absen'=>$count,
+                'semua'=>count($total),
+                'persen'=>$percentage]);
+            }
+            $absen = Absensi::with('detail', 'ekstra')->where('user_id', Auth::user()->id)->get();
+            return view('siswa.riwayatabsen', compact('absen', 'banyak'));
     }
+
     public function absen(request $request)
     {
         $validator = Validator::make($request->all(), [

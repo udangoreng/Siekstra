@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Kesiswaan\AbsensiController;
 use App\Http\Controllers\Kesiswaan\EkstraController as EkstraController;
 use App\Http\Controllers\Kesiswaan\JadwalController;
@@ -30,9 +31,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('landing');
-});
+Route::get('', [Controller::class, 'home']);
 
 Route::middleware(['guest'])->group(function(){
     Route::get('/login', [SessionController::class, 'index']);
@@ -62,6 +61,7 @@ Route::middleware(['auth'])->group(function(){
 
         Route::prefix('jadwal')->group(function() {
             Route::get('', [JadwalController::class, 'index']);
+            Route::post('edit/{id}', [JadwalController::class, 'update']);
         });
 
         Route::prefix('jurnal')->group(function() {

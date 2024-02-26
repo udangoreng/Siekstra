@@ -15,24 +15,24 @@ class JurnalController extends Controller
     public function index(request $request)
     {
         $ekstra = Ekstra::all();
-        $jurnal = Jurnal::with('detail', 'ekstra', 'pelatih')->paginate(25);
+        $jurnal = Jurnal::with('detail', 'ekstra', 'pelatih')->latest()->paginate(10);
         if($request->cari or $request->ekstra){
             $jurnal = Jurnal::with('detail', 'ekstra', 'pelatih')
             ->where('ekstra_id', $request->ekstra)
-            ->orWhere('judul', $request->cari)
-            ->paginate(25);
+            ->orWhere('judul', 'LIKE', '%'.$request->cari.'%')
+            ->paginate(10);
         }
 
         if($request->tanggal_mulai){
             $jurnal = Jurnal::with('detail', 'ekstra', 'pelatih')
             ->where('tanggal', '>=', $request->tanggal_mulai)
-            ->paginate(25);
+            ->paginate(10);
         }
 
         if($request->tanggal_selesai){
             $jurnal = Jurnal::with('detail', 'ekstra', 'pelatih')
             ->where('tanggal', '<=', $request->tanggal_selesai)
-            ->paginate(25);
+            ->paginate(10);
         }
         return view('Kesiswaan.jurnal', compact('jurnal', 'ekstra'));
     }

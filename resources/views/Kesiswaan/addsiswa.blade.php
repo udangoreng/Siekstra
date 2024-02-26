@@ -31,7 +31,7 @@
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Tahun Ajaran</label>
                         <select name="tahun_pelajaran" class="form-select" aria-label="Default select example">
-                            @foreach (range(date('Y') - 1, 2050) as $item)
+                            @foreach (range(date('Y') - 1, 2030) as $item)
                                 <option value="{{ $item }}/{{ $item + 1 }}">
                                     {{ $item }} / {{ $item + 1 }}
                                 </option>
@@ -40,7 +40,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Nomor Handphone</label>
-                        <input type="text" class="form-control" name="nomor_hp_siswa" id="exampleFormControlInput1">
+                        <input type="number" class="form-control" name="nomor_hp_siswa" id="exampleFormControlInput1">
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea1" class="form-label">Alamat</label>

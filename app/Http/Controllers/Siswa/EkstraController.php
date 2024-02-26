@@ -92,13 +92,16 @@ class EkstraController extends Controller
                     'ekstra_id' => $request->ekstra_id,
                 ]);
 
-                $absen = Absensi::create([
-                    'absensi_id' => $request->absensi_id,
-                    'user_id' => $request->user_id,
-                    'ekstra_id' => $request->ekstra_id,
-                    'status' => 'Dikonfirmasi',
-                    'keterangan' => 'Hadir',
-                ]);
+                $absen = Absensi::where('absensi_id', $request->absensi_id)->where('user_id', $request->user_id);
+                if(!$absen){
+                    $absen = Absensi::create([
+                        'absensi_id' => $request->absensi_id,
+                        'user_id' => $request->user_id,
+                        'ekstra_id' => $request->ekstra_id,
+                        'status' => 'Dikonfirmasi',
+                        'keterangan' => 'Hadir',
+                    ]);
+                }
                 toast('Data Berhasil Ditambahkan','success');
                 return redirect('/siswa/ekstra/');
             }

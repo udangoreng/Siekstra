@@ -38,8 +38,8 @@
                                 @if ($item['ekstra'] == '[]')
                                     -
                                 @endif
-                                @foreach ($item['ekstra'] as $eks)
-                                    {{ $eks->nama_ekstra }}<br>
+                                @foreach ($item['ekstra']->unique('nama_ekstra') as $ekstra)
+                                    {{ $ekstra->nama_ekstra }}<br>
                                 @endforeach
                             </td>
                             <td>{{ $item->nomor_hp_pelatih }}</td>

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ekstra;
 use App\Models\Pelatih;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,12 +16,12 @@ use RealRashid\SweetAlert\Facades\Alert;
 class PelatihController extends Controller
 {
     public function index(request $request){
-        $pelatih = Pelatih::with('ekstra')->paginate(25);
+        $pelatih = Pelatih::with('ekstra')->latest()->paginate(10);
         if($request->cari){
             $pelatih = Pelatih::with('ekstra')
             ->where('nama_pelatih', 'LIKE', '%'.$request->cari.'%')
             ->orWhere('nip', $request->cari)
-            ->paginate(25);
+            ->paginate(10);
         }
         return view('Kesiswaan.pelatih', compact('pelatih'));
     }
@@ -29,11 +30,13 @@ class PelatihController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'NIP'=>'required',
+            'username'=>'required',
             'nama_pelatih'=>'required',
             'nomor_hp_pelatih'=>'required',
             'alamat_pelatih'=>'required',
         ],[
             'NIP.required'=>'Harap Isi NIP',
+            'username.required'=>'Harap Isi username',
             'nama_pelatih.required'=>'Harap Isi Nama',
             'nomor_hp_pelatih.required'=>'Harap Isi Nomor HP',
             'alamat_pelatih.required'=>'Harap Isi Alamat',
@@ -49,20 +52,20 @@ class PelatihController extends Controller
         } else {
             // Create user by NIP & Nip password@SMKN1jenpo
             $email = $request->NIP."@contoh.com";
-            $pass = $request->NIP."@SMKN1jenpo";
+            $pass = $request->username."@SMKN1jenpo";
 
             $user = User::create([
                 'name' => $request->nama_pelatih,
                 'email' => $email,
-                'username' => $request->NIP,
+                'username' => $request->username,
                 'password' => $pass,
                 'role' => "Pelatih",
             ]);
             
             if($user){
-                if(User::where('username', $request->NIP)){
+                if(User::where('username', $request->username)){
                     // Get Userid by those NIP
-                    $userdata = User::where('username', $request->NIP)->first();
+                    $userdata = User::where('username', $request->username)->first();
 
                     // Create a user
                     $data = Pelatih::create([
@@ -83,11 +86,17 @@ class PelatihController extends Controller
     }
 
     public function show(string $id)
-    {
-        // One to One relationship
+    {   
+        $month = Carbon::now()->month;
+        if ($month >= 7){
+            $thn = Carbon::now()->year."/".(Carbon::now()->year)+1;
+        } else {
+            $thn = ((Carbon::now()->year)-1)."/".(Carbon::now()->year);
+        }
+
         $pelatih = Pelatih::with('ekstra', 'user')->where('id', $id)->first();
         $ekstra = Ekstra::all();
-        return view('Kesiswaan.editpelatih', compact('pelatih', 'ekstra'));
+        return view('Kesiswaan.editpelatih', compact('pelatih', 'ekstra', 'thn'));
     }
 
     public function update(Request $request, string $id)

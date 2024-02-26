@@ -51,7 +51,6 @@
         </thead>
         <tbody>
             @foreach ($absen as $item)
-                {{ $item }}
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item['siswa']->nama_siswa }}</td>
@@ -70,6 +69,34 @@
                 </tr>
             @endforeach
         </tbody>
+    </table>
+    <table class="table table-borderless" style="padding: 0 !important; margin: 0 !important; border-spacing: 0px;">
+        <tr style="padding: 0 !important; margin: 0 !important;">
+            <td style="padding: 0 !important; margin: 0 !important;">Jumlah Seluruh Siswa</td>
+            <td style="padding: 0 !important; margin: 0 !important;">:</td>
+            <td style="padding: 0 !important; margin: 0 !important;">{{ count($all) }}</td>
+        </tr>
+        <tr style="padding: 0 !important; margin: 0 !important;">
+            <td style="padding: 0 !important; margin: 0 !important;">Jumlah Siswa Terabsen</td>
+            <td style="padding: 0 !important; margin: 0 !important;">:</td>
+            <td style="padding: 0 !important; margin: 0 !important;">{{ count($absen) }}</td>
+        </tr>
+        <tr>
+            <td style="padding: 0 !important; margin: 0 !important;">Keterangan</td>
+            <td>Hadir</td>
+            <td>Sakit</td>
+            <td>Ijin</td>
+            <td>Alpha</td>
+            <td>Belum Absensi</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>{{ count($absen->where('keterangan', 'Hadir')) }}</td>
+            <td>{{ count($absen->where('keterangan', 'Sakit')) }}</td>
+            <td>{{ count($absen->where('keterangan', 'Ijin')) }}</td>
+            <td>{{ count($absen->where('keterangan', 'Alpha')) }}</td>
+            <td>{{ count($siswa) }}</td>
+        </tr>
     </table>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">

@@ -40,14 +40,15 @@ class AbsensiController extends Controller
             $thn_ajaran = ((substr($detail->tanggal_mulai, 0, 4))-1)."/".(substr($detail->tanggal_mulai, 0, 4));
         }
         $absen = Absensi::with('user', 'siswa')->where('absensi_id', $detail->absensi_id)->get();
-
-        if ($absen == '[]'){
-            $siswa = DB::table('ekstra_diikuti')
+        $all = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
             ->select('siswa.*')
             ->where('ekstra_id', '=', $detail->ekstra_id)
             ->where('tahun_ajaran', '=', $thn_ajaran)
             ->get();
+
+        if ($absen == '[]'){
+            $siswa = $all;
         } else{
             foreach ($absen->toArray() as $siswa) {
                 array_push($siswa_id, $siswa['user_id']);
@@ -62,7 +63,7 @@ class AbsensiController extends Controller
         }
 
         $jurnal = Jurnal::where('absensi_id', $id)->get();
-        return view('Pelatih.absensi', compact('absen', 'detail', 'siswa', 'jurnal'));
+        return view('Pelatih.absensi', compact('absen', 'detail', 'siswa', 'jurnal', 'all'));
     }
 
     public function absen(request $request)
@@ -214,14 +215,15 @@ class AbsensiController extends Controller
             $thn_ajaran = ((substr($detail->tanggal_mulai, 0, 4))-1)."/".(substr($detail->tanggal_mulai, 0, 4));
         }
         $absen = Absensi::with('user', 'siswa')->where('absensi_id', $detail->absensi_id)->get();
-
-        if ($absen == '[]'){
-            $siswa = DB::table('ekstra_diikuti')
+        $all = DB::table('ekstra_diikuti')
             ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
             ->select('siswa.*')
             ->where('ekstra_id', '=', $detail->ekstra_id)
             ->where('tahun_ajaran', '=', $thn_ajaran)
             ->get();
+
+        if ($absen == '[]'){
+            $siswa = $all;
         } else{
             foreach ($absen->toArray() as $siswa) {
                 array_push($siswa_id, $siswa['user_id']);
@@ -234,7 +236,7 @@ class AbsensiController extends Controller
             ->whereNotIn('siswa.user_id', $siswa_id)
             ->get();
         }
-        $pdf = PDF::loadView('Pelatih.absensipdf', compact('absen', 'detail', 'siswa'));
+        $pdf = PDF::loadView('Pelatih.absensipdf', compact('absen', 'detail', 'siswa', 'all'));
         return $pdf->stream();
     }
 }

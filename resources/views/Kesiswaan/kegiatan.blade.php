@@ -47,7 +47,16 @@
                 <tbody>
                     @foreach ($absen as $item)
                         <tr>
-                            <td>{{ $loop->iteration }}</td>
+                            <td>
+                                <div class="d-flex">
+                                    @if ($item->tanggal_mulai <= date('Y-m-d') && $item->tanggal_selesai >= date('Y-m-d'))
+                                        <div class="rounded-2"
+                                            style="background-color: #28a745; width: 5px; height: 25px; margin-right: 0.5rem;">
+                                        </div>
+                                    @endif
+                                    {{ $loop->iteration }}
+                                </div>
+                            </td>
                             <td>{{ $item->absensi_id }}</td>
                             <td>{{ $item->ekstra->nama_ekstra }}</td>
                             <td>{{ $item->kategori }}</td>
@@ -112,6 +121,7 @@
                     @endforeach
                 </tbody>
             </table>
+            {{ $absen->links() }}
         </div>
     </div>
 @endsection

@@ -8,6 +8,7 @@ use App\Models\DetailAbsen;
 use App\Models\Ekstra;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -15,24 +16,25 @@ class AbsensiController extends Controller
 {
     public function absensi(request $request)
     {
-        $absen = Absensi::with('user', 'ekstra')->paginate(25);
+        $absen = Absensi::with('user', 'ekstra')->latest()->paginate(10);
         $ekstra = Ekstra::all();
         if($request->cari or $request->ekstra){
             $absen = Absensi::where('ekstra_id', $request->ekstra)
             ->orWhere('absensi_id', 'LIKE', '%'.$request->cari.'%')
             ->orWhere('keterangan', $request->cari)
             ->orWhere('status', $request->cari)
-            ->paginate(25);
+            ->paginate(10);
         }
 
         if($request->tanggal_mulai){
             $absen = Absensi::where('created_at', '>=', $request->tanggal_mulai)
-            ->paginate(25);
-        }
-
-        if($request->tanggal_selesai){
-            $absen = Absensi::where('created_at', '<', $request->tanggal_selesai)
-            ->paginate(25);
+            ->paginate(10);
+        } else if($request->tanggal_selesai){
+            $absen = Absensi::where('created_at', '<=', $request->tanggal_selesai)
+            ->paginate(10);
+        } else if($request->tanggal_mulai && $request->tanggal_selesai){
+            $absen = Absensi::whereBetween('created_at', [$request->tanggal_mulai, $request->tanggal_selesai])
+            ->paginate(10);
         }
 
         return view('Kesiswaan.absensi', compact('ekstra', 'absen'));
@@ -41,23 +43,28 @@ class AbsensiController extends Controller
     public function kegiatan(request $request)
     {
         $ekstra = Ekstra::all();
-        $absen = DetailAbsen::with('ekstra')->paginate(25);
+        $absen = DetailAbsen::with('ekstra')->latest()->paginate(10);
         if($request->cari or $request->ekstra){
             $absen = DetailAbsen::with('ekstra')
             ->where('ekstra_id', $request->ekstra)
             ->orWhere('kategori', $request->cari)
             ->orWhere('absensi_id', $request->cari)
-            ->paginate(25);
+            ->paginate(10);
         }
 
         if($request->tanggal_mulai){
             $absen = DetailAbsen::where('tanggal_mulai', '>=', $request->tanggal_mulai)
-            ->paginate(25);
+            ->paginate(10);
         }
 
         if($request->tanggal_selesai){
             $absen = DetailAbsen::where('tanggal_selesai', '<=', $request->tanggal_selesai)
-            ->paginate(25);
+            ->paginate(10);
+        }
+
+        if($request->tanggal_selesai && $request->tanggal_mulai){
+            $absen = DetailAbsen::whereBetween('created_at', [$request->tanggal_mulai, $request->tanggal_selesai])
+            ->paginate(10);
         }
 
         return view('Kesiswaan.kegiatan', compact('ekstra', 'absen'));
@@ -119,9 +126,40 @@ class AbsensiController extends Controller
 
     public function show(string $id)
     {
+        $siswa_id =[];
         $ekstra = Ekstra::all();
         $absen = DetailAbsen::where('id', $id)->with('ekstra', 'detail')->first();
-        return view('Kesiswaan.editkegiatan', ['absen'=>$absen, 'ekstra'=>$ekstra]);
+        $month = date_parse_from_format("Y-m-d", $absen->tanggal_mulai);
+        if ($month['month'] >= 7){
+            $thn_ajaran = substr($absen->tanggal_mulai, 0, 4)."/".(substr($absen->tanggal_mulai, 0, 4))+1;
+        } else {
+            $thn_ajaran = ((substr($absen->tanggal_mulai, 0, 4))-1)."/".(substr($absen->tanggal_mulai, 0, 4));
+        }
+
+        $absensi = Absensi::with('user', 'siswa')->where('absensi_id', $absen->absensi_id)->get();
+        $all = DB::table('ekstra_diikuti')
+            ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
+            ->select('siswa.*')
+            ->where('ekstra_id', '=', $absen->ekstra_id)
+            ->where('tahun_ajaran', '=', $thn_ajaran)
+            ->get();
+
+        if ($absensi == '[]'){
+            $siswa = $all;
+        } else{
+            foreach ($absensi->toArray() as $siswa) {
+                array_push($siswa_id, $siswa['user_id']);
+            }
+            $siswa = DB::table('ekstra_diikuti')
+            ->join('siswa', 'ekstra_diikuti.user_id', '=', 'siswa.user_id')
+            ->select('siswa.*')
+            ->where('ekstra_id', '=', $absen->ekstra_id)
+            ->where('tahun_ajaran', '=', $thn_ajaran)
+            ->whereNotIn('siswa.user_id', $siswa_id)
+            ->get();
+        }
+        
+        return view('Kesiswaan.editkegiatan', compact('absen', 'absensi', 'siswa', 'ekstra', 'all'));
     }
 
     public function update(Request $request, string $id)

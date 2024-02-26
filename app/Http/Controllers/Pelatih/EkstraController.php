@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\DB;
 
 class EkstraController extends Controller
 {
-    public function index()
+    public function index(request $request)
     {
-        $ekstra_diikuti = [];
+        $ekstra = [];
         $current_date = Carbon::now()->toDateString();
         $month = Carbon::now()->month;
         if ($month >= 7){
@@ -26,25 +26,36 @@ class EkstraController extends Controller
             $thn = ((Carbon::now()->year)-1)."/".(Carbon::now()->year);
         }
 
-        $data = Pelatih::with('ekstra')->where('user_id', Auth::user()->id)->first();
+        $data = DB::table('ekstra_diikuti')
+            ->join('pelatih', 'ekstra_diikuti.user_id', '=', 'pelatih.user_id')
+            ->select('pelatih.*', 'ekstra_diikuti.*')
+            ->where('ekstra_diikuti.user_id', Auth::user()->id)
+            ->where('tahun_ajaran', $request->cari ? $request->cari : $thn)
+            ->get();
+
+        $thn_diikuti = DB::table('ekstra_diikuti')
+            ->where('ekstra_diikuti.user_id', Auth::user()->id)
+            ->get();
+
         if($data == '[]'){
         } else {
-            foreach($data['ekstra'] as $ekstra){
-                // Get Detail Ekstra
-                $data_ekstra = DetailEkstra::where('id_ekstra', $ekstra->id)->with('ekstra')->where('tahun_ajaran', $ekstra->pivot->tahun_ajaran)->first();
+            foreach($data as $id){
+                // Get Detail id
+                $data_ekstra = DetailEkstra::where('id_ekstra', $id->ekstra_id)->with('ekstra')->where('tahun_ajaran', $id->tahun_ajaran)->first();
 
                 // If there is no detail there
                 if(!$data_ekstra){
-                    $diikuti = Ekstra::where('id', $ekstra->id)->first()->toArray();
+                    $diikuti = Ekstra::where('id', $id->ekstra_id)->first()->toArray();
                 } else {
-                    $diikuti = DetailEkstra::where('id_ekstra', $ekstra->id)->with('ekstra')->where('tahun_ajaran', $ekstra->pivot->tahun_ajaran)->first()->toArray();
+                    $diikuti = DetailEkstra::where('id_ekstra', $id->ekstra_id)->with('ekstra')->where('tahun_ajaran', $id->tahun_ajaran)->first()->toArray();
                 }
-                $absensi = DetailAbsen::where('ekstra_id', $ekstra->id)->where('tanggal_selesai', '>=', $current_date)->where('tanggal_mulai', "<=", $current_date)->get()->toArray();
+                $absensi = DetailAbsen::where('ekstra_id', $id->ekstra_id)->where('tanggal_selesai', '>=', $current_date)->where('tanggal_mulai', "<=", $current_date)->get()->toArray();
                 $diikuti['absensi'] = $absensi;
-                array_push($ekstra_diikuti, $diikuti);
+                array_push($ekstra, $diikuti);
             }
         }
-        return view('Pelatih.ekstra', ['ekstra'=>$ekstra_diikuti, 'thn'=>$thn, 'data' => $data]);
+        $thn = $request->cari ? $request->cari : $thn;
+        return view('Pelatih.ekstra', compact('ekstra', 'data', 'thn', 'thn_diikuti'));
     }
 
     public function show(string $id, string $thn)

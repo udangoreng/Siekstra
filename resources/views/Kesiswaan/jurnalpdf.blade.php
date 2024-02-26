@@ -72,7 +72,7 @@
 
             <div>
                 <h2 class="fw-semibold">Absensi Siswa</h2>
-                <table style="width: 100;">
+                <table style="width: 100%;">
                     <thead>
                         <tr>
                             <th scope="col">#</th>

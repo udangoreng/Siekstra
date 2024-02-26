@@ -5,7 +5,7 @@
         <div class="d-flex justify-content-between mt-2 me-5 align-items-center">
             <h2 class="fw-bolder">Jurnal</h2>
         </div>
-        <form class="d-flex justify-content-end me-5 align-items-end" role="search" action="/kesiswaan/absen">
+        <form class="d-flex justify-content-end me-5 align-items-end" role="search" action="/kesiswaan/jurnal">
             <div class="me-2">
                 <label for="exampleFormControlInput1" class="form-label">Tanggal Mulai</label>
                 <input class="form-control" type="date" name="tanggal_mulai" aria-label="Search">
@@ -57,72 +57,73 @@
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="mx-3">
-                                        <svg width="20" height="20" viewBox="0 0 506 506" fill="none"
-                                            data-bs-toggle="modal" data-bs-target="#editModal{{ $item->id }}"
+                                        <svg width="20" height="20" viewBox="0 0 512 512" fill="none"
+                                            data-bs-toggle="modal" data-bs-target="#jurnalModal{{ $item->id }}"
                                             xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M470.679 16.3929C448.822 -5.46431 413.491 -5.46431 391.634 16.3929L361.592 46.3343L459.301 144.043L489.342 114.002C511.2 92.1447 511.2 56.8138 489.342 34.9566L470.679 16.3929ZM172.063 235.963C165.975 242.051 161.284 249.537 158.59 257.82L129.047 346.447C126.153 355.03 128.449 364.512 134.836 370.999C141.224 377.486 150.705 379.682 159.388 376.788L248.015 347.245C256.199 344.551 263.684 339.86 269.872 333.772L436.845 166.699L339.037 68.8902L172.063 235.963ZM95.8125 58.6103C42.916 58.6103 0 101.526 0 154.423V409.923C0 462.819 42.916 505.735 95.8125 505.735H351.312C404.209 505.735 447.125 462.819 447.125 409.923V314.11C447.125 296.445 432.853 282.173 415.188 282.173C397.522 282.173 383.25 296.445 383.25 314.11V409.923C383.25 427.588 368.978 441.86 351.312 441.86H95.8125C78.1471 441.86 63.875 427.588 63.875 409.923V154.423C63.875 136.757 78.1471 122.485 95.8125 122.485H191.625C209.29 122.485 223.562 108.213 223.562 90.5478C223.562 72.8824 209.29 58.6103 191.625 58.6103H95.8125Z"
-                                                fill="#828282" />
+                                            <g clip-path="url(#clip0_142_2)">
+                                                <path
+                                                    d="M256 512C323.895 512 389.01 485.029 437.019 437.019C485.029 389.01 512 323.895 512 256C512 188.105 485.029 122.99 437.019 74.9807C389.01 26.9714 323.895 0 256 0C188.105 0 122.99 26.9714 74.9807 74.9807C26.9714 122.99 0 188.105 0 256C0 323.895 26.9714 389.01 74.9807 437.019C122.99 485.029 188.105 512 256 512ZM216 336H240V272H216C202.7 272 192 261.3 192 248C192 234.7 202.7 224 216 224H264C277.3 224 288 234.7 288 248V336H296C309.3 336 320 346.7 320 360C320 373.3 309.3 384 296 384H216C202.7 384 192 373.3 192 360C192 346.7 202.7 336 216 336ZM256 128C264.487 128 272.626 131.371 278.627 137.373C284.629 143.374 288 151.513 288 160C288 168.487 284.629 176.626 278.627 182.627C272.626 188.629 264.487 192 256 192C247.513 192 239.374 188.629 233.373 182.627C227.371 176.626 224 168.487 224 160C224 151.513 227.371 143.374 233.373 137.373C239.374 131.371 247.513 128 256 128Z"
+                                                    fill="#828282" />
+                                            </g>
+                                            <defs>
+                                                <clipPath id="clip0_142_2">
+                                                    <rect width="512" height="512" fill="white" />
+                                                </clipPath>
+                                            </defs>
                                         </svg>
                                     </div>
 
                                     <!-- Modal -->
-                                    <div class="modal fade" id="editModal{{ $item->id }}" tabindex="-1"
+                                    <div class="modal fade" id="jurnalModal{{ $item->id }}" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
+                                        <div class="modal-dialog modal-lg">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Lihat Jurnal</h1>
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Detail Jurnal</h1>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlInput1"
-                                                            class="form-label">Judul</label>
-                                                        <input type="text" value="{{ $item->judul }}"
-                                                            class="form-control" id="exampleFormControlInput1"
-                                                            placeholder="name@example.com" readonly>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlInput1"
-                                                            class="form-label">Ekstrakurikuler</label>
-                                                        <input type="text" value="{{ $item['ekstra']->nama_ekstra }}"
-                                                            class="form-control" id="exampleFormControlInput1"
-                                                            placeholder="name@example.com" readonly>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlInput1"
-                                                            class="form-label">Penulis</label>
-                                                        <input type="text" value="{{ $item['pelatih']->nama_pelatih }}"
-                                                            class="form-control" id="exampleFormControlInput1"
-                                                            placeholder="name@example.com" readonly>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlInput1" class="form-label">Jenis
-                                                            Kegiatan</label>
-                                                        <input type="text" value="{{ $item->jenis_kegiatan }}"
-                                                            class="form-control" id="exampleFormControlInput1"
-                                                            placeholder="name@example.com" readonly>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlInput1"
-                                                            class="form-label">Lokasi</label>
-                                                        <input type="text" value="{{ $item->lokasi }}"
-                                                            class="form-control" id="exampleFormControlInput1"
-                                                            placeholder="name@example.com" readonly>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlInput1"
-                                                            class="form-label">Tanggal</label>
-                                                        <input type="text" value="{{ $item->tanggal }}"
-                                                            class="form-control" id="exampleFormControlInput1"
-                                                            placeholder="name@example.com" readonly>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="exampleFormControlTextarea1"
-                                                            class="form-label">Deskripsi Kegiatan</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $item->deskripsi }}</textarea>
+                                                <div class="modal-body mx-5">
+                                                    <h5 class="mb-3">{{ $item->judul }}</h5>
+                                                    <table style="width: 100%">
+                                                        <tr>
+                                                            <td>Ekstrakurikuler</td>
+                                                            <td>:</td>
+                                                            <td>{{ $item['ekstra']->nama_ekstra }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Penulis</td>
+                                                            <td>:</td>
+                                                            <td>{{ $item['pelatih']->nama_pelatih }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Tanggal Ditulis</td>
+                                                            <td>:</td>
+                                                            <td>{{ $item->tanggal }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>ID Kegiatan</td>
+                                                            <td>:</td>
+                                                            <td>{{ $item['detail']->absensi_id }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Jenis Kegiatan</td>
+                                                            <td>:</td>
+                                                            <td>{{ $item->jenis_kegiatan }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Lokasi</td>
+                                                            <td>:</td>
+                                                            <td>{{ $item->lokasi }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Deskripsi Kegiatan</td>
+                                                            <td>:</td>
+                                                        </tr>
+                                                    </table>
+                                                    <div>
+                                                        <p style="white-space: pre-line; text-align: justify;">
+                                                            {{ $item->deskripsi }}</p>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -158,7 +159,7 @@
                                         </form>
                                     </div>
 
-                                    <div>
+                                    {{-- <div>
                                         <div data-bs-toggle="modal" data-bs-target="#deleteModal{{ $item->id }}">
                                             <svg width="15" height="20" viewBox="0 0 511 582" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -196,7 +197,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </td>
                         </tr>
