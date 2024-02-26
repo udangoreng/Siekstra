@@ -44,11 +44,11 @@ class KesiswaanController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'NIP'=>'required',
+            'username'=>'required',
             'nama'=>'required',
             'email'=>'required',
         ],[
-            'NIP.required'=>'Harap Isi NIP Kesiswaan',
+            'username.required'=>'Harap Isi username Kesiswaan',
             'nama.required'=>'Harap Isi Nama Kesiswaan',
             'email.required'=>'Harap Isi Email Kesiswaan',
         ]);
@@ -62,9 +62,9 @@ class KesiswaanController extends Controller
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
             return redirect()->back();
         } else {
-            $password = $request->NIP."@SMKN1jenpo";
+            $password = $request->username."@SMKN1jenpo";
             $kesiswaan = User::create([
-                'username' => $request->NIP,
+                'username' => $request->username,
                 'name' => $request->nama,
                 'email' => $request->email,
                 'role' => 'Kesiswaan',

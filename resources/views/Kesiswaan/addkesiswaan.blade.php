@@ -17,8 +17,8 @@
                 <div class="modal-body">
                     @csrf
                     <div class="mb-3">
-                        <label for="exampleFormControlInput1" class="form-label">NIP</label>
-                        <input type="text" class="form-control" name="NIP" id="exampleFormControlInput1">
+                        <label for="exampleFormControlInput1" class="form-label">Username</label>
+                        <input type="text" class="form-control" name="username" id="exampleFormControlInput1">
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Nama</label>
