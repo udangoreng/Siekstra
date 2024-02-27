@@ -31,7 +31,8 @@
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
             @foreach ($ekstra as $item)
                 @if (array_key_exists('ekstra', $item))
-                    <a href="/pelatih/ekstra/{{ str_replace('/', '-', $item['tahun_ajaran']) }}">
+                    <a
+                        href="/pelatih/ekstra/{{ $item['ekstra']['id'] }}/{{ str_replace('/', '-', $item['tahun_ajaran']) }}">
                         <div class="card mx-1 my-3">
                             <div class="card-body">
                                 <h4 class="fw-semibold mb-2">{{ $item['ekstra']['nama_ekstra'] }}</h4>

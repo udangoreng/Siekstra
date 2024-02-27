@@ -85,12 +85,38 @@ class AbsensiController extends Controller
                             'status' => 'Ditolak',
                             'keterangan' => $request->keterangan,
                         ]);
+                    } else {
+                        $absen = Absensi::create([
+                            'absensi_id' => $request->absensi_id,
+                            'user_id' => $user_id,
+                            'ekstra_id' => $request->ekstra_id,
+                            'status' => 'Pending',
+                            'keterangan' => $request->keterangan,
+                        ]);
+
+                        if($absen){
+                            Alert::success('Sukses', 'Absensi Anda Telah Dicatat');
+                            return redirect()->back();
+                        }
                     }
                 } elseif($current <= $detail->tanggal_mulai){
-                    if($time < $detail->waktu_mulai){
-                        Alert::error('Perhatian', 'Absensi Belum Dibuka!');
-                        return redirect()->back();
-                    }
+                        if($time < $detail->waktu_mulai){
+                            Alert::error('Perhatian', 'Absensi Belum Dibuka!');
+                            return redirect()->back();
+                        } else {
+                            $absen = Absensi::create([
+                                'absensi_id' => $request->absensi_id,
+                                'user_id' => $user_id,
+                                'ekstra_id' => $request->ekstra_id,
+                                'status' => 'Pending',
+                                'keterangan' => $request->keterangan,
+                            ]);
+
+                            if($absen){
+                                Alert::success('Sukses', 'Absensi Anda Telah Dicatat');
+                                return redirect()->back();
+                            }
+                        }
                 } else {
                     $absen = Absensi::create([
                         'absensi_id' => $request->absensi_id,
@@ -99,12 +125,12 @@ class AbsensiController extends Controller
                         'status' => 'Pending',
                         'keterangan' => $request->keterangan,
                     ]);
+
+                    if($absen){
+                        Alert::success('Sukses', 'Absensi Anda Telah Dicatat');
+                        return redirect()->back();
+                    }
                 }
-        
-                if($absen){
-                    Alert::success('Sukses', 'Absensi Anda Telah Dicatat');
-                    return redirect()->back();
-                } 
             } else {
                 Alert::warning('Perhatian', 'Anda Telah Melakukan Absen Sebelumnya');
                 return redirect()->back();

@@ -63,7 +63,7 @@
                         <div class="card-body">
                             <h4>Ekstrakurikuler Hari Ini</h4>
                             <p>{{ now()->locale('id')->dayName }}, {{ date('d/m/Y') }}</p>
-                            @foreach ($eks_today as $item)
+                            @foreach ($eks_today->unique('id_ekstra') as $item)
                                 <div class="mb-3">
                                     <h6 class="fw-bold">{{ $item['ekstra']->nama_ekstra }}</h6>
                                     <p>{{ substr($item->waktu_mulai, 0, 5) }} | {{ substr($item->waktu_selesai, 0, 5) }}

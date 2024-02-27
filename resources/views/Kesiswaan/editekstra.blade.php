@@ -172,13 +172,13 @@
                         Ekstrakurikuler</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="/kesiswaan/ekstra/assign/{{ $ekstra->id }}" method="POST">
+                <form action="/kesiswaan/ekstra/assign/{{ $ekstra->id_ekstra }}" method="POST">
                     <div class="modal-body">
                         @csrf
                         <div class="mb-3">
                             <input type="text" name="tahun_pelajaran"
                                 value="{{ $ekstra->tahun_pelajaran ? $ekstra->tahun_pelajaran : $thn }}" readonly hidden>
-                            <input type="text" name="ekstra_id" value="{{ $ekstra->id }}" readonly hidden>
+                            <input type="text" name="ekstra_id" value="{{ $ekstra->id_ekstra }}" readonly hidden>
                             <label for="exampleFormControlInput1" class="form-label">
                                 Nama Guru</label>
                             <div class="mb-3 me-4">
