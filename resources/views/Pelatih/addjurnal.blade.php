@@ -13,7 +13,7 @@
             <form action="/pelatih/jurnal/add" method="POST">
                 @csrf
                 <input type="text" class="form-control" value="{{ $detail->ekstra_id }}" name="ekstra_id"
-                    id="exampleFormControlInput1" readonly>
+                    id="exampleFormControlInput1" readonly hidden>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="exampleFormControlInput1" class="form-label">Id Kegiatan</label>

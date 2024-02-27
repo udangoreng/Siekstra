@@ -69,7 +69,7 @@ class JurnalController extends Controller
             ]);
 
             if($data){
-                Alert::success('Berhasil', 'Absensi Anda Telah Dicatat');
+                Alert::success('Berhasil', 'Jurnal Berhasil Dibuat');
                 return redirect()->back();
             }
         }
