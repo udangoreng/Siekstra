@@ -174,7 +174,7 @@ class EkstraController extends Controller
 }
 
     public function assign(Request $request, string $id){
-        $user_id = User::where('username', $request->id)->first()->id;
+        $user_id = User::where('id', $request->id)->first()->id;
         // Check if user with those excact data isnt there
         $data = DB::table('ekstra_diikuti')
                 ->where('user_id', $user_id)->where('ekstra_id', $request->ekstra_id)->where('tahun_ajaran', $request->tahun_ajaran)->first();
@@ -182,16 +182,16 @@ class EkstraController extends Controller
         if(!$data){
             DB::table('ekstra_diikuti')->insert([
                 'user_id' => $user_id, 
-                'tahun_ajaran' => $request->tahun_ajaran,
-                'ekstra_id' => $request->ekstra_id,
+                'tahun_ajaran' => $request->tahun_pelajaran,
+                'ekstra_id' => $id,
             ]);
 
             toast('Data Berhasil Ditambahkan','success');
-            return redirect('/kesiswaan/ekstra/'.$id);
+            return redirect()->back();
         }
 
         Alert::warning('Perhatian', 'Ekstrakurikuler Telah Ditambahkan');
-        return redirect('/kesiswaan/ekstra/'.$id);
+        return redirect()->back();
     }
 
     

@@ -186,7 +186,7 @@
                                     placeholder="Cari Atau Pilih Pelatih">
                                 <datalist id="datalistOptions">
                                     @foreach ($guru as $item)
-                                        <option value="{{ $item->NIP }}"> - {{ $item->nama_pelatih }}</option>
+                                        <option value="{{ $item->user_id }}"> - {{ $item->nama_pelatih }}</option>
                                     @endforeach
                                 </datalist>
                             </div>

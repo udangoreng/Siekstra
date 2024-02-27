@@ -62,6 +62,12 @@ class KesiswaanController extends Controller
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
             return redirect()->back();
         } else {
+            $data = User::where('username', $request->username)->get();
+            if(!$data == '[]'){
+                Alert::error('Terjadi Kesalahan', $data);
+                return redirect()->back();
+            }
+
             $password = $request->username."@SMKN1jenpo";
             $kesiswaan = User::create([
                 'username' => $request->username,

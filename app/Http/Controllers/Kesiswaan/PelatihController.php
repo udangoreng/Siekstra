@@ -50,6 +50,11 @@ class PelatihController extends Controller
             alert()->error('Terjadi Kesalahan', $message)->toHtml();
             return redirect()->back();
         } else {
+            $data = User::where('username', $request->username)->get();
+            if(!$data == '[]'){
+                Alert::error('Terjadi Kesalahan', $data);
+                return redirect()->back();
+            }
             // Create user by NIP & Nip password@SMKN1jenpo
             $email = $request->NIP."@contoh.com";
             $pass = $request->username."@SMKN1jenpo";
